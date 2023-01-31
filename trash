@@ -1,0 +1,15 @@
+import species
+import creature
+import scheduler
+
+for i in range(1,7):
+    species.generate_species()
+
+print("\nbestiary: ", species.bestiary, "\n")
+
+print("bestiary list: ", species.bestiary_names, "\n")
+
+for i in range (1,4):
+    creature.generate_creature(creature.get_random_creature_type())
+
+print("actors: ", scheduler.population, "\n" )
