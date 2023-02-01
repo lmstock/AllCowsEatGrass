@@ -9,7 +9,7 @@ def scheduler_run():
     logthis.logger.info("scheduler_run")
     
     for i in actors:
-        print("actor in scheduler: ", i)
+        print("scheduled actor: ", i)
         i.action()
         
     

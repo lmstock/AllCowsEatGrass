@@ -1,15 +1,22 @@
 import species
 import creature
 import scheduler
+import random
 
-for i in range(1,7):
-    species.generate_species()
+lista = []
 
-print("\nbestiary: ", species.bestiary, "\n")
+animals = ["cat", "dog", "fish"]
 
-print("bestiary list: ", species.bestiary_names, "\n")
 
-for i in range (1,4):
-    creature.generate_creature(creature.get_random_creature_type())
+def spawn_animal():
+    x = random.choice(animals)
+    lista.append(x)
 
-print("actors: ", scheduler.population, "\n" )
+
+def schedule():
+    for i in lista:
+        print(i)
+
+spawn_animal()
+spawn_animal()
+schedule()
