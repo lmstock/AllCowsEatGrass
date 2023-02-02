@@ -20,18 +20,16 @@ class Creature:
     active_task: list = field(default_factory=lambda: [])
 
     age: int = 0
-    energy: int = 100
+    energy: int = 45
 
 
-    # checks on what individual is doing each turn
+    # checks on what the individual is doing each turn
     def action(self):
-        print(self, " action()")
-        
 
         def increment_turn(self):
-            print("increment_turn()")
+            print(self.creature_id, "increment_turn()")
                 
-            # attrs that change each turn
+            # update attributes that change each turn
             self.energy = self.energy - 1
             self.age = self.age + 1
 
@@ -68,8 +66,15 @@ class Creature:
                     self.task_queue.append(sleep)             
             check_energy()
 
+            print("task queue = ", self.task_queue)
             # check_satiety()  > very similar to check_energy
 
+
+        def sleep(self):
+            print("sleep")
+
+        def wander(self):
+            print("wander")
 
         increment_turn(self)
         trigger_tasks(self)
@@ -85,9 +90,10 @@ def generate_creature(creature_type):
     logthis.logger.info("generate_creature")
     new_creature = Creature(creature_type)
 
-    # add to actors
+    # add to waiting room
     new_creature_data = new_creature.__dict__
     scheduler.population[new_creature.creature_id] = new_creature_data
+    scheduler.waiting_room.append(new_creature)
 
 
 def get_random_creature_type():

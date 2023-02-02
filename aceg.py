@@ -19,6 +19,8 @@ from pygame.locals import (
     K_ESCAPE,
     K_b,
     K_p,
+    K_a,
+    K_w,
     KEYDOWN,
     QUIT, 
 )
@@ -74,6 +76,14 @@ def main(turn, running):
             if event.key == K_p:
                 logthis.logger.info("p = population")
                 pprint.pprint(scheduler.population)
+
+            if event.key == K_a:
+                logthis.logger.info("a = actors list")
+                pprint.pprint(scheduler.actors)
+
+            if event.key == K_w:
+                logthis.logger.info("w = waiting room")
+                pprint.pprint(scheduler.waiting_room )
 
             # a skip turn
             if event.key == K_SPACE:
