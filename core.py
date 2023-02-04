@@ -22,21 +22,16 @@ def random_coords():
     # x = random_coord()
     # print(x[0][0])
 
-# takes tile coords as tuple and returns display coords
-def calculate_display_coords(coords):
-    x = coords[0]
-    y = coords[1]
-    tile_size = 30
-    x_display = int(game_setup.display_width/2) + (x * tile_size)
-    y_display = int(game_setup.display_height/2) + (y * tile_size)
-    display_tuple = x_display, y_display
-    return display_tuple
+
 
 def turn():
     game_setup.turn = game_setup.turn + 1
     print(game_setup.turn)
 
-
+def coords_world_to_display(x,y):
+    x = x * 30
+    y = y * 30
+    return x,y
 
 
 # return a list of tiles surrounding a coord

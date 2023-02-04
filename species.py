@@ -6,6 +6,7 @@ from itertools import count
 
 import names
 import logthis
+import imgs
 
 
 bestiary = {}
@@ -52,6 +53,7 @@ body_type = [
 class Species:
 
     name: str 
+    img: str
     head: str
     size: str
     body_type: str
@@ -63,13 +65,18 @@ def generate_species():
     logthis.logger.info("generate_species")
 
     name = names.generate_name()
+    x_img = str
     x_head = random.choice(head)
     x_size = random.choice(body_size)
     x_body_type = random.choice(body_type)
     x_energy = 100 # modify based on x_size
 
+    # select image
+    species_img = random.choice(imgs.cret_pool)
+    imgs.cret_pool.remove(species_img)
+
     # generate new species object
-    new_species = Species(name, x_head, x_size, x_body_type, 100)
+    new_species = Species(name, species_img, x_head, x_size, x_body_type, 100)
 
     # add to bestiary
     species_data = new_species.__dict__
@@ -78,9 +85,9 @@ def generate_species():
     # add name to bestiary list
     bestiary_names.append(new_species.name)
 
-#generate_species()
+# generate_species()
 
-
+# print(bestiary)
 
 
 

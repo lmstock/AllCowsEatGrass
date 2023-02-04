@@ -21,19 +21,19 @@ from pygame.locals import (
     K_p,
     K_a,
     K_w,
-    KEYDOWN,
+    KEYDOWN, 
     QUIT, 
 )
 
 # make display bigger and print text?
 
 """
-phase1 - 
+phase1 -   
     movement
     sleep
     viewport
 
-phase2 - 
+phase2 -  
     flora
     eating
 """
@@ -43,13 +43,10 @@ phase2 -
 for i in range(1,7):
     species.generate_species()
 
-for i in range (1,4):
+for i in range(1,5):
     creature.generate_creature(creature.get_random_creature_type())
 
 
-
-
-#pygame.display.update()
 
 
 def main(turn, running):
