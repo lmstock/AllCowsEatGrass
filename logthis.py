@@ -6,7 +6,7 @@ tfile = "aceg_logs\\" + str(t) + ".log"
 
 
 logger = logging.getLogger('aceg')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # create file handler which logs even debug messages
 # fh = logging.FileHandler(tfile)

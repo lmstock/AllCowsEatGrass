@@ -50,7 +50,7 @@ for i in range(1,5):
 
 
 def main(turn, running):
-    logthis.logger.info("main")
+    logthis.logger.debug("main")
 
     while running == True:
         event = pygame.event.wait()
@@ -58,33 +58,33 @@ def main(turn, running):
         if event.type == KEYDOWN:
 
             if event.key == K_ESCAPE:
-                logthis.logger.info("escape key")
+                logthis.logger.debug("escape key")
                 running = False
                 return
 
             if event.key == K_DOWN:
-                logthis.logger.info("down")
+                logthis.logger.debug("down")
                 core.turn()
 
             if event.key == K_b:
-                logthis.logger.info("b = bestiary")
+                logthis.logger.debug("b = bestiary")
                 pprint.pprint(species.bestiary)
 
             if event.key == K_p:
-                logthis.logger.info("p = population")
+                logthis.logger.debug("p = population")
                 pprint.pprint(scheduler.population)
 
             if event.key == K_a:
-                logthis.logger.info("a = actors list")
+                logthis.logger.debug("a = actors list")
                 pprint.pprint(scheduler.actors)
 
             if event.key == K_w:
-                logthis.logger.info("w = waiting room")
+                logthis.logger.debug("w = waiting room")
                 pprint.pprint(scheduler.waiting_room )
 
             # a skip turn
             if event.key == K_SPACE:
-                logthis.logger.info("spacebar")
+                logthis.logger.debug("spacebar")
 
                 core.turn()
                 scheduler.scheduler_run()

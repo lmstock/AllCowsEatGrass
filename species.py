@@ -6,7 +6,7 @@ from itertools import count
 
 import names
 import logthis
-import imgs
+import game_imgs.imgs as imgs
 
 
 bestiary = {}
@@ -85,9 +85,7 @@ def generate_species():
     # add name to bestiary list
     bestiary_names.append(new_species.name)
 
-# generate_species()
 
-# print(bestiary)
 
 
 

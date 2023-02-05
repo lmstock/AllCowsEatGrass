@@ -8,7 +8,7 @@ import logthis
 import scheduler
 import species
 import game_setup
-import imgs
+import game_imgs.imgs as imgs
 
 
 
@@ -31,7 +31,7 @@ class Creature:
     def action(self):
 
         def increment_turn(self):
-            print(self.creature_id, " increment_turn()")
+            logthis.logger.debug("increment_turn")
                 
             # update attributes that change each turn
             self.energy = self.energy - 1
@@ -39,9 +39,7 @@ class Creature:
             self.age = round(self.age,2)
 
         def trigger_tasks(self):
-            print(self.creature_id, " trigger_tasks()")
-            print("task_q = ", self.task_q)
-            
+            logthis.logger.debug("trigger_tasks")
             def check_energy():
                 if self.active_task == "sleep":
                     return
@@ -50,8 +48,7 @@ class Creature:
                     
                     # remove old sleep tasks from queue
                     def remove_old_sleeps():
-                        print("remove_old_sleeps()")
-                    
+                        logthis.logger.debug("remove_old_sleeps")
                         if self.task_q == []:
                             return
 
@@ -76,10 +73,11 @@ class Creature:
 
             check_energy()
 
-            print("task q = ", self.task_q)
+
             # check_satiety()  > very similar to check_energy
 
         def check_active_task(self):
+            logthis.logger.debug("check_active_task")
 
             # clear task from q if completed
             if self.active_task[2] >= self.active_task[3]:
@@ -89,7 +87,7 @@ class Creature:
 
                 # if no active task, get one
                 def get_new_task(self):
-                    print("get_new_task")
+                    logthis.logger.debug("get_new_task")
 
                     duration = random.randint(1,8)
 
@@ -105,11 +103,10 @@ class Creature:
                     elif p3 != []: x = random.choice(p3)
                     else: x = ["wander", 3, 0, duration]
 
-                    print("new task = ", x)
                     try:
                         self.task_q.remove(x)
                     except Exception as e:
-                        print(e)
+                        pass
 
                     return x
 
@@ -117,30 +114,31 @@ class Creature:
                        
 
         def increment_active_task(self):
+            logthis.logger.debug("increment_active_task")
+
             if self.active_task[0] == "sleep":
                 sleep(self)
 
             elif self.active_task[0] == "wander":
-                print("wandering")
                 wander(self)
 
             elif self.active_task[0] == "nothing":
-                print("nothing")
                 nothing(self)
                 
         # creature activities
         def sleep(self):
-            print("sleep")
+            logthis.logger.debug("sleep")
             self.active_task[2] = self.active_task[2] + 1
             self.energy = self.energy + 11
 
         # cover old sprite
         def cover_old_sprite():
+            logthis.logger.debug("cover_old_sprite")
             game_setup.game_display.blit(imgs.bg_sprite, self.world_coords)
             pygame.display.update()
 
         def wander(self):
-            print("wander")
+            logthis.logger.debug("wander")
             self.active_task[2] = self.active_task[2] + 1
 
             cover_old_sprite()
@@ -156,12 +154,12 @@ class Creature:
             pygame.display.update()
 
         def nothing(self):
-            print("nothing")
+            logthis.logger.debug("nothing")
             self.active_task[2] = self.active_task[2] + 1
     
 
         def update_viewport(self):
-            print("update_viewport")
+            logthis.logger.debug("update_viewport")
             game_setup.game_display.blit(self.img, self.world_coords)
             pygame.display.update()
 
@@ -181,9 +179,10 @@ class Creature:
 
 # requires a string from bestiary_names list
 def generate_creature(creature_type):
-    logthis.logger.info("generate_creature")
+    logthis.logger.debug("generate_creature")
     my_pic = species.bestiary[creature_type]["img"]
     new_creature = Creature(creature_type, my_pic)
+    logthis.logger.info(new_creature)
 
     # add to waiting room
     new_creature_data = new_creature.__dict__
@@ -192,7 +191,7 @@ def generate_creature(creature_type):
 
 
 def get_random_creature_type():
-    logthis.logger.info("get_random_creature_type")
+    logthis.logger.debug("get_random_creature_type")
     f = random.choice(species.bestiary_names)
     return f
 
