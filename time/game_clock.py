@@ -1,24 +1,56 @@
 # importing the pygame module
 import pygame
 
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    K_SPACE,
+    K_ESCAPE,
+    K_b,
+    K_p,
+    K_a,
+    K_w,
+    KEYDOWN, 
+    QUIT, 
+)
+
+bg = (27, 59, 87)
+
 # initialising the pygame
 pygame.init()
+game_display = pygame.display.set_mode((200, 200))
+game_display.fill(bg) 
+pygame.display.set_caption("clockmaker")
+pygame.display.update()
 
-# declaring a variable i with value 0
-i=0
+running = True
+	
+turn = 0
+
 
 # creating a clock object
 clock=pygame.time.Clock()
 
-# creating a loop for 5 iterations
-while True:
+
+
+while running:
+
+	clock.tick(.25)
+	turn = turn + 1 
+	print(turn)
 	
-	# setting fps of program to max 1 per second
-	clock.tick(.5)
+	for event in pygame.event.get():
+		if event.type == KEYDOWN:
+
+			if event.key == K_ESCAPE:
+				running = False
 	
-	# printing time used in the previous tick
-	print(clock.get_time())
+			if event.key == K_a:
+				print("hi")
+
+
+
+
 	
-	# printing compute the clock framerate
-	print(clock.get_fps())
-	i=i+1
