@@ -3,7 +3,7 @@ import pygame
 
 # game display
 world_tiles_width = 40
-world_tiles_height = 30
+world_tiles_height = 25
 
 display_width = world_tiles_width * 30
 display_height = world_tiles_height * 30
