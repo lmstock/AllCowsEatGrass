@@ -17,6 +17,7 @@ import game_imgs.imgs as imgs
 class Creature:
     type: str
     img: str 
+    size: str
     creature_id: int = field(default_factory=count().__next__)
     world_coords: list[int] = field(default_factory=lambda: [250,250])
     task_q: list = field(default_factory=lambda: [])
@@ -134,7 +135,8 @@ class Creature:
         # cover old sprite
         def cover_old_sprite():
             logthis.logger.debug("cover_old_sprite")
-            game_setup.game_display.blit(imgs.bg_sprite, self.world_coords)
+            
+            game_setup.game_display.blit(imgs.bg_sprite_large, self.world_coords)
             pygame.display.update()
 
         def wander(self):
@@ -149,7 +151,7 @@ class Creature:
             elif c == "w": self.world_coords[0] = self.world_coords[0] - 30
             elif c == "n": self.world_coords[1] = self.world_coords[1] + 30
             else: self.world_coords[1] = self.world_coords[1] - 30
-
+            
             game_setup.game_display.blit(self.img, self.world_coords)
             pygame.display.update()
 
@@ -181,7 +183,9 @@ class Creature:
 def generate_creature(creature_type):
     logthis.logger.debug("generate_creature")
     my_pic = species.bestiary[creature_type]["img"]
-    new_creature = Creature(creature_type, my_pic)
+    my_size = species.bestiary[creature_type]["size"]
+
+    new_creature = Creature(creature_type, my_pic, my_size)
     logthis.logger.info(new_creature)
 
     # add to waiting room
@@ -194,4 +198,6 @@ def get_random_creature_type():
     logthis.logger.debug("get_random_creature_type")
     f = random.choice(species.bestiary_names)
     return f
+
+
 

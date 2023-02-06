@@ -37,8 +37,8 @@ body_size = [
     "small",
     "medium",
     "large",
-    "very large",
-    "mega large"
+    "very_large",
+    "mega"
 ]
 
 body_type = [
@@ -65,15 +65,14 @@ def generate_species():
     logthis.logger.info("generate_species")
 
     name = names.generate_name()
-    x_img = str
     x_head = random.choice(head)
     x_size = random.choice(body_size)
     x_body_type = random.choice(body_type)
     x_energy = 100 # modify based on x_size
 
     # select image
-    species_img = random.choice(imgs.cret_pool)
-    imgs.cret_pool.remove(species_img)
+    species_img = imgs.choose_img(x_size)
+
 
     # generate new species object
     new_species = Species(name, species_img, x_head, x_size, x_body_type, 100)
