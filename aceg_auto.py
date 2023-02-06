@@ -23,7 +23,6 @@ from pygame.locals import (
     QUIT, 
 )
 
-# make display bigger and print text?
 
 """
 phase1 -   
@@ -38,10 +37,10 @@ phase2 -
 
 # generate species and creatures to work with
 
-for i in range(1,7):
+for i in range(1,4):
     species.generate_species()
 
-for i in range(1,5):
+for i in range(1,10):
     creature.generate_creature(creature.get_random_creature_type())
 
 
@@ -51,7 +50,7 @@ def main(running):
     logthis.logger.debug("main")
 
     while running == True:
-        game_setup.clock.tick(.5)
+        game_setup.clock.tick(1)
 
         core.turn()
         scheduler.scheduler_run()
