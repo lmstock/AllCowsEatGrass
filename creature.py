@@ -17,15 +17,21 @@ import game_imgs.imgs as imgs
 class Creature:
     type: str
     img: str 
+    bg_img: str
     size: str
+
+    sleep_dur: float
+    awake_dur: float
+    max_energy: float  # fully rested
+    rest_gain: float
+    base_fatigue: float
+    energy: float
+
     creature_id: int = field(default_factory=count().__next__)
     world_coords: list[int] = field(default_factory=lambda: [250,250])
     task_q: list = field(default_factory=lambda: [])
     active_task: list = field(default_factory=lambda: ["wander", 3, 0, 7])
-    
     age: int = 0
-    energy: int = 47
-
 
 
     # checks on what the individual is doing each turn
@@ -35,17 +41,20 @@ class Creature:
             logthis.logger.debug("increment_turn")
                 
             # update attributes that change each turn
-            self.energy = self.energy - 1
+            self.energy = round(self.energy + self.base_fatigue, 2)
+            
             self.age = self.age + .01
             self.age = round(self.age,2)
 
         def trigger_tasks(self):
             logthis.logger.debug("trigger_tasks")
+
             def check_energy():
                 if self.active_task == "sleep":
                     return
 
-                if self.energy < 40:
+                # less than 40%
+                if self.energy < self.max_energy * .4:
                     
                     # remove old sleep tasks from queue
                     def remove_old_sleeps():
@@ -61,14 +70,15 @@ class Creature:
                     remove_old_sleeps()
 
                     # add sleep task - [task, priority, current turn, max turn]
-                    if self.energy < 10:
-                        sleep = ["sleep", 1, 0, 7]
+                    
+                    if self.energy < self.max_energy * .1:   # <10%
+                        sleep = ["sleep", 1, 0, self.sleep_dur]
 
-                    elif self.energy < 30:
-                        sleep = ["sleep", 2, 0, 7]
+                    elif self.energy < self.max_energy * .3:   # <30%
+                        sleep = ["sleep", 2, 0, self.sleep_dur]
 
-                    elif self.energy < 40:
-                        sleep = ["sleep", 3, 0, 7]
+                    elif self.energy < self.max_energy * .4:   # <40%
+                        sleep = ["sleep", 3, 0, self.sleep_dur]
 
                     self.task_q.append(sleep)   
 
@@ -130,20 +140,20 @@ class Creature:
         def sleep(self):
             logthis.logger.debug("sleep")
             self.active_task[2] = self.active_task[2] + 1
-            self.energy = self.energy + 11
+            self.energy = round(self.energy + self.rest_gain, 2)
 
         # cover old sprite
-        def cover_old_sprite():
+        def cover_old_sprite(self):
             logthis.logger.debug("cover_old_sprite")
             
-            game_setup.game_display.blit(imgs.bg_sprite_large, self.world_coords)
+            game_setup.game_display.blit(self.bg_img, self.world_coords)
             pygame.display.update()
 
         def wander(self):
             logthis.logger.debug("wander")
             self.active_task[2] = self.active_task[2] + 1
 
-            cover_old_sprite()
+            cover_old_sprite(self)
 
             dirs = ["e", "w", "n", "s"]
             c = random.choice(dirs)
@@ -182,10 +192,31 @@ class Creature:
 # requires a string from bestiary_names list
 def generate_creature(creature_type):
     logthis.logger.debug("generate_creature")
-    my_pic = species.bestiary[creature_type]["img"]
+    my_img = species.bestiary[creature_type]["img"]
+    my_bg_img = species.bestiary[creature_type]["img_bg"]
     my_size = species.bestiary[creature_type]["size"]
 
-    new_creature = Creature(creature_type, my_pic, my_size)
+    sleep_dur = species.bestiary[creature_type]["sleep_duration"]
+    awake_dur = species.bestiary[creature_type]["awake_duration"]
+    max_energy = species.bestiary[creature_type]["full_energy"]  # fully rested
+    rest_gain = species.bestiary[creature_type]["rest_gain"]
+    base_fatigue = species.bestiary[creature_type]["base_fatigue"]
+
+    energy = species.bestiary[creature_type]["full_energy"]
+
+    new_creature = Creature(
+        creature_type,
+        my_img,
+        my_bg_img,
+        my_size,
+        sleep_dur,
+        awake_dur,
+        max_energy,
+        rest_gain,
+        base_fatigue,
+        energy
+        )
+
     logthis.logger.info(new_creature)
 
     # add to waiting room

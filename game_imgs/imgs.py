@@ -121,27 +121,38 @@ def choose_img(size):
         case "tiny":
             x = random.choice(cret_pool_tiny)
             cret_pool_tiny.remove(x)
-            return x
+            y = bg_sprite_tiny
+            return x, y
+        
         case "small":
             x = random.choice(cret_pool_small)
             cret_pool_small.remove(x)
-            return x
+            y = bg_sprite_small
+            return x, y
+        
         case "medium":
             x = random.choice(cret_pool_medium)
             cret_pool_medium.remove(x)
-            return x
+            y = bg_sprite_medium
+            return x, y
+        
         case "large":
             x = random.choice(cret_pool_large)
             cret_pool_large.remove(x)
-            return x
+            y = bg_sprite_large
+            return x, y
+        
         case "very_large":
             x = random.choice(cret_pool_very_large)
             cret_pool_very_large.remove(x)
-            return x    
+            y = bg_sprite_very_large
+            return x, y
+        
         case "mega":
             x = random.choice(cret_pool_mega)
             cret_pool_mega.remove(x)
-            return x
+            y = bg_sprite_mega
+            return x, y
 
 
 

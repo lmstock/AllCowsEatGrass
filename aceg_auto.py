@@ -30,7 +30,6 @@ phase1 -
     sleep
     viewport
 
-phase2 -  
     flora
     eating
 """
