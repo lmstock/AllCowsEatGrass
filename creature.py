@@ -21,7 +21,6 @@ class Creature:
     size: str
 
     sleep_dur: float
-    awake_dur: float
     max_energy: float  # fully rested
     rest_gain: float
     base_fatigue: float
@@ -41,10 +40,10 @@ class Creature:
             logthis.logger.debug("increment_turn")
                 
             # update attributes that change each turn
-            self.energy = round(self.energy + self.base_fatigue, 2)
+            if self.active_task[0] != "sleep":
+                self.energy = round(self.energy + self.base_fatigue, 2)
             
-            self.age = self.age + .01
-            self.age = round(self.age,2)
+            self.age = round(self.age + .01, 2)
 
         def trigger_tasks(self):
             logthis.logger.debug("trigger_tasks")
@@ -139,8 +138,18 @@ class Creature:
         # creature activities
         def sleep(self):
             logthis.logger.debug("sleep")
+
+            # increment current turn
             self.active_task[2] = self.active_task[2] + 1
+
+            # increase energy
             self.energy = round(self.energy + self.rest_gain, 2)
+
+            # do not exceed max_energy remove from active task if full
+            if self.energy >= self.max_energy:
+                self.energy = self.max_energy
+
+                self.active_task[2] = self.active_task[3]
 
         # cover old sprite
         def cover_old_sprite(self):
@@ -197,7 +206,6 @@ def generate_creature(creature_type):
     my_size = species.bestiary[creature_type]["size"]
 
     sleep_dur = species.bestiary[creature_type]["sleep_duration"]
-    awake_dur = species.bestiary[creature_type]["awake_duration"]
     max_energy = species.bestiary[creature_type]["full_energy"]  # fully rested
     rest_gain = species.bestiary[creature_type]["rest_gain"]
     base_fatigue = species.bestiary[creature_type]["base_fatigue"]
@@ -210,7 +218,6 @@ def generate_creature(creature_type):
         my_bg_img,
         my_size,
         sleep_dur,
-        awake_dur,
         max_energy,
         rest_gain,
         base_fatigue,

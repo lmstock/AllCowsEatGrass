@@ -61,7 +61,6 @@ class Species:
     body_type: str
     
     sleep_duration: float
-    awake_duration: float
     full_energy: float  # fully rested
     rest_gain: float  # energy gained per turn sleeping
     base_fatigue: float  # energy lost per turn awake
@@ -85,10 +84,9 @@ def generate_species():
     s = gen_sleep_habits()
 
     sleep_duration = s[0]
-    awake_duration = s[1]
-    fully_rested = s[2]
-    rest_gain = s[3]
-    base_fatigue = s[4]
+    fully_rested = s[1]
+    rest_gain = s[2]
+    base_fatigue = s[3]
 
 
     # generate new species object
@@ -100,7 +98,7 @@ def generate_species():
         x_size,
         x_body_type, 
         sleep_duration,
-        awake_duration,
+
         fully_rested,
         rest_gain,
         base_fatigue)
@@ -125,7 +123,7 @@ def gen_sleep_habits():
     rest_gain = round(fully_rested/sleep_duration, 2)
     base_fatigue = round((fully_rested/awake_duration) * -1, 2)
 
-    return sleep_duration, awake_duration, fully_rested, rest_gain, base_fatigue
+    return sleep_duration, fully_rested, rest_gain, base_fatigue
 
     
 

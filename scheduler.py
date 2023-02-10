@@ -12,15 +12,16 @@ def scheduler_run():
         #print(i.__dict__)
 
         b = {
-            "profile": i.creature_id,
+            "p": i.creature_id,
             "type": i.type,
-            "size": i.size,
+            "sze": i.size,
             "sleep_dur": i.sleep_dur,
-            "max_energy": i.max_energy,
-            "rest_gain": i.rest_gain,
-            "energy": i.energy,
-            "task_q": i.task_q,
-            "active_task": i.active_task
+            "mx_nrg": i.max_energy,
+            "r_gain": i.rest_gain,
+            "b_f": i.base_fatigue,
+            "nrg": i.energy,
+            "tsk_q": i.task_q,
+            "actve_tsk": i.active_task
         }
         
         print(b)
