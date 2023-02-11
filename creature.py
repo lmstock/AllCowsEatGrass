@@ -20,17 +20,22 @@ class Creature:
     bg_img: str
     size: str
 
+    # sleep attributes
     sleep_dur: float
     max_energy: float  # fully rested
     rest_gain: float
     base_fatigue: float
     energy: float
 
+    # movement attributes
+    speed: float
+
     creature_id: int = field(default_factory=count().__next__)
     world_coords: list[int] = field(default_factory=lambda: [250,250])
     task_q: list = field(default_factory=lambda: [])
     active_task: list = field(default_factory=lambda: ["wander", 3, 0, 7])
     age: int = 0
+    knowledge_base = {}
 
 
     # checks on what the individual is doing each turn
@@ -44,6 +49,7 @@ class Creature:
                 self.energy = round(self.energy + self.base_fatigue, 2)
             
             self.age = round(self.age + .01, 2)
+
 
         def trigger_tasks(self):
             logthis.logger.debug("trigger_tasks")
@@ -161,20 +167,22 @@ class Creature:
         def wander(self):
             logthis.logger.debug("wander")
             self.active_task[2] = self.active_task[2] + 1
+            speed = self.speed
 
             cover_old_sprite(self)
 
             dirs = ["e", "w", "n", "s"]
             c = random.choice(dirs)
-            if c == "e": self.world_coords[0] = self.world_coords[0] + 30
-            elif c == "w": self.world_coords[0] = self.world_coords[0] - 30
-            elif c == "n": self.world_coords[1] = self.world_coords[1] + 30
-            else: self.world_coords[1] = self.world_coords[1] - 30
+            if c == "e": self.world_coords[0] = self.world_coords[0] + speed
+            elif c == "w": self.world_coords[0] = self.world_coords[0] - speed
+            elif c == "n": self.world_coords[1] = self.world_coords[1] + speed
+            else: self.world_coords[1] = self.world_coords[1] - speed
             
             game_setup.game_display.blit(self.img, self.world_coords)
             pygame.display.update()
 
         def nothing(self):
+            # doing nothing brings you down :(
             logthis.logger.debug("nothing")
             self.active_task[2] = self.active_task[2] + 1
     
@@ -211,6 +219,7 @@ def generate_creature(creature_type):
     base_fatigue = species.bestiary[creature_type]["base_fatigue"]
 
     energy = species.bestiary[creature_type]["full_energy"]
+    speed = species.bestiary[creature_type]["speed"]
 
     new_creature = Creature(
         creature_type,
@@ -221,7 +230,8 @@ def generate_creature(creature_type):
         max_energy,
         rest_gain,
         base_fatigue,
-        energy
+        energy,
+        speed
         )
 
     logthis.logger.info(new_creature)

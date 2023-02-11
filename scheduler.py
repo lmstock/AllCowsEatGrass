@@ -15,13 +15,14 @@ def scheduler_run():
             "p": i.creature_id,
             "type": i.type,
             "sze": i.size,
-            "sleep_dur": i.sleep_dur,
-            "mx_nrg": i.max_energy,
-            "r_gain": i.rest_gain,
-            "b_f": i.base_fatigue,
+            # "sleep_dur": i.sleep_dur,
+            # "mx_nrg": i.max_energy,
+            # "r_gain": i.rest_gain,
+            # "b_f": i.base_fatigue,
             "nrg": i.energy,
             "tsk_q": i.task_q,
-            "actve_tsk": i.active_task
+            "actve_tsk": i.active_task,
+            "speed": i.speed
         }
         
         print(b)
