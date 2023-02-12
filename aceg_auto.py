@@ -2,7 +2,9 @@ import pygame
 import pprint
 
 import species
+import flora_species
 import creature
+import flora
 import scheduler
 import game_setup
 import logthis
@@ -35,6 +37,12 @@ phase1 -
 """
 
 # generate species and creatures to work with
+
+for i in range(1,5):
+    flora_species.generate_flora_species()
+
+for i in range(1,5):
+    flora.generate_flora(flora.get_random_flora_type())
 
 for i in range(1,4):
     species.generate_species()

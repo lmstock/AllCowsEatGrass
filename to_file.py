@@ -1,6 +1,7 @@
 import species
 import scheduler
 import game_setup
+import flora_species
 
 import pprint
 
@@ -22,6 +23,9 @@ def get_game_info():
         game_info.write('\n\n')
 
         p = pprint.pformat(scheduler.population)
+        game_info.write(str(p))
+
+        p = pprint.pformat(flora_species.herbarium)
         game_info.write(str(p))
 
 

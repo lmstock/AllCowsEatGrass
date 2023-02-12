@@ -209,6 +209,7 @@ class Creature:
 # requires a string from bestiary_names list
 def generate_creature(creature_type):
     logthis.logger.debug("generate_creature")
+    
     my_img = species.bestiary[creature_type]["img"]
     my_bg_img = species.bestiary[creature_type]["img_bg"]
     my_size = species.bestiary[creature_type]["size"]

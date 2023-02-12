@@ -16,7 +16,7 @@ import world
 
 bestiary = {}
 bestiary_names = []
-actors = {}
+#actors = {}
 
 
 head_pool = [
