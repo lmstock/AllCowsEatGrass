@@ -2,6 +2,7 @@ import species
 import scheduler
 import game_setup
 import flora_species
+import reporter
 
 import pprint
 
@@ -27,6 +28,10 @@ def get_game_info():
 
         p = pprint.pformat(flora_species.herbarium)
         game_info.write(str(p))
+
+        reporter.write_html(str(b))
+
+
 
 
 

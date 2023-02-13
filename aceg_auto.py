@@ -1,5 +1,4 @@
 import pygame
-import pprint
 
 import species
 import flora_species
@@ -10,6 +9,7 @@ import game_setup
 import logthis
 import core
 import to_file
+import reporter
 
 from dataclasses import dataclass, field
 from time import sleep
@@ -57,11 +57,12 @@ def main(running):
     logthis.logger.debug("main")
 
     while running == True:
-        game_setup.clock.tick(1)
+        game_setup.clock.tick(.5)
 
         core.turn()
         scheduler.scheduler_run()
         pygame.display.update()
+        reporter.write_html()
 
         for event in pygame.event.get():
 

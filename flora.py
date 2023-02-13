@@ -6,10 +6,9 @@ from itertools import count
 
 import logthis
 import scheduler
-import species
 import game_setup
-import game_imgs.imgs as imgs
 import flora_species
+import core
 
 
 @dataclass
@@ -55,14 +54,17 @@ def generate_flora(flora_type):
 
     my_img = flora_species.herbarium[flora_type]["img"]
     my_size = flora_species.herbarium[flora_type]["size"]
+    
+    get_coords = core.random_coords()
 
+    
     new_flora = Flora (
         flora_type,
         my_img,
         my_size,
         energy = 100,
         growth_data = [],
-        coords = [250,250]
+        coords = get_coords
 )
 
     logthis.logger.info(new_flora)
@@ -76,5 +78,4 @@ def get_random_flora_type():
     logthis.logger.debug("get_random_flora_type")
     f = random.choice(flora_species.herbarium_names)
     return f
-
 

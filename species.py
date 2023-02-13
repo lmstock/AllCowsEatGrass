@@ -9,10 +9,13 @@ import logthis
 import game_imgs.imgs as imgs
 import core
 import world
+import mongotest
+
 
 # vague idea of sort of random metrics that belong to species, a sort of unit of heredity, a gene.
 # They can be tied to attributes somehow and have the ability to change so that the gene and its 
 # consequence can descend from the ancestor. (ex.  A123=100, rT49=73)
+
 
 bestiary = {}
 bestiary_names = []
@@ -122,6 +125,20 @@ def generate_species():
     # add name to bestiary list
     bestiary_names.append(new_species.name)
     
+    # add to db
+    new_species.species_id = {
+        "name": name,
+        "head": head,
+        "size": size,
+        "body_type": body_type,
+        "sleep_duration": sleep_duration,
+        "fully_rested": fully_rested,
+        "rest_gain": rest_gain,
+        "base_fatigue": base_fatigue,
+        "speed": speed
+    } 
+
+    mongotest.add_species(new_species.species_id)
 
 def gen_sleep_habits():
     logthis.logger.info("gen_sleep_habits")

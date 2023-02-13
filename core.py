@@ -17,20 +17,18 @@ def roll(d,s):
 
 def random_coords():
     logthis.logger.debug("random_coords")
-    x = roll(2, game_setup.world_tiles_width)
-    y = roll(2, game_setup.world_tiles_height)
-    tile_coords = (x,y)
-    display_coords = (x*30, y*30)
-    return tile_coords, display_coords
-    # x = random_coord()
-    # print(x[0][0])
+    x = roll(2, game_setup.display_width / 2)
+    y = roll(2, game_setup.display_height / 2)
+    coord = (x,y)
+    return coord
 
 
 
 def turn():
     logthis.logger.debug("turn")
+    logthis.logger.debug(game_setup.turn)
     game_setup.turn = game_setup.turn + 1
-    print(game_setup.turn)
+    
 
 
 # marked for removal 2/11/23

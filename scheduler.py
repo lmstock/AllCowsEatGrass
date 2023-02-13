@@ -1,6 +1,7 @@
 import logthis
 import flora_species
 
+
 # creatures
 population = {}
 actors = []
@@ -15,7 +16,7 @@ def scheduler_run():
     logthis.logger.debug("scheduler_run")
     
     for i in flora_actors:
-        print(i.__dict__)
+        #print(i.__dict__)
         i.action()
 
     for i in actors:
@@ -35,7 +36,7 @@ def scheduler_run():
             "speed": i.speed
         }
         
-        print(b)
+        #print(b)
         i.action()
 
 
