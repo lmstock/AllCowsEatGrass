@@ -24,13 +24,12 @@ def random_coords():
 
 
 
-def turn():
-    logthis.logger.debug("turn")
-    logthis.logger.debug(game_setup.turn)
-    game_setup.turn = game_setup.turn + 1
+
+
+
     
 
-
+##you are going to want this...
 # marked for removal 2/11/23
 def coords_world_to_display(x,y):
     logthis.logger.debug("coords_world_to_display")

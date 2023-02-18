@@ -1,5 +1,6 @@
 import pygame
 
+
 import species
 import flora_species
 import creature
@@ -7,9 +8,11 @@ import flora
 import scheduler
 import game_setup
 import logthis
-import core
+import world
 import to_file
 import reporter
+
+from world import World
 
 from dataclasses import dataclass, field
 from time import sleep
@@ -47,7 +50,7 @@ for i in range(1,5):
 for i in range(1,4):
     species.generate_species()
 
-for i in range(1,10):
+for i in range(1,2):
     creature.generate_creature(creature.get_random_creature_type())
 
 
@@ -59,15 +62,17 @@ def main(running):
     while running == True:
         game_setup.clock.tick(.5)
 
-        core.turn()
+        game_setup.w.increment_tick()
+        h = game_setup.w.get_bg_color()
+        game_setup.game_display.fill(h) 
+        print(game_setup.w.current_tick)
+        
         scheduler.scheduler_run()
         pygame.display.update()
         reporter.write_html()
 
         for event in pygame.event.get():
 
-
-            
             if event.type == KEYDOWN:
 
                 if event.key == K_ESCAPE:
@@ -82,8 +87,6 @@ def main(running):
             # Did the user click the window close button? If so, stop the loop.
             elif event.type == QUIT:
                 running = False
-
-            
 
 main(game_setup.running)
 

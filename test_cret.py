@@ -47,19 +47,15 @@ class Creature:
 
         def increment_turn(self):
             logthis.logger.debug("increment_turn")
-
-            if self.active_task == []:
-                pass
-            
-            else:
-                # update attributes that change each turn
-                if self.active_task[0] != "sleep":
-                    self.rest[0] = round(self.rest[0] + self.base_fatigue, 2)
-
-                if self.active_task[0] != "eat":
-                    self.satiety[0] = round(self.satiety[0] - self.satiety_lost_per_turn, 2)
                 
-                self.age = round(self.age + .0000025, 7)
+            # update attributes that change each turn
+            if self.active_task[0] != "sleep":
+                self.rest[0] = round(self.rest[0] + self.base_fatigue, 2)
+
+            if self.active_task[0] != "eat":
+                self.satiety[0] = round(self.satiety[0] - self.satiety_lost_per_turn, 2)
+            
+            self.age = round(self.age + .0000025, 7)
 
 
         def trigger_tasks(self):
@@ -67,94 +63,86 @@ class Creature:
 
             # SLEEP TRIGGER
             def check_current_rest():
+                if self.active_task == "sleep":
+                    return
 
-                if self.active_task == []:
-                    pass
+                # less than 40%
+                if self.rest[0] < self.rest[1] * .4:
+                    
+                    # remove old sleep tasks from queue
+                    def remove_old_sleeps():
+                        logthis.logger.debug("remove_old_sleeps")
+                        if self.task_q == []:
+                            return
 
-                else:
-                    if self.active_task == "sleep":
-                        pass
+                        else:
+                            for i in self.task_q:
+                                if i[0] == "sleep":
+                                    self.task_q.remove(i)
 
-                    else:
-                        # less than 40% 
-                        if self.rest[0] < self.rest[1] * .4:
-                        
-                            # remove old sleep tasks from task_q if present
-                            def remove_old_sleeps():
-                                logthis.logger.debug("remove_old_sleeps")
-                                
-                                if self.task_q == []:
-                                    return
+                    remove_old_sleeps()
 
-                                else:
-                                    for i in self.task_q:
-                                        if i[0] == "sleep":
-                                            self.task_q.remove(i)
+                    # add sleep task - [task, priority, current turn, max turn]
+                    if self.rest[0] < self.rest[1] * .1:   # <10%
+                        sleep = ["sleep", 1, 0, self.sleep_dur]
 
-                            remove_old_sleeps()
+                    elif self.rest[0] < self.rest[1] * .3:   # <30%
+                        sleep = ["sleep", 2, 0, self.sleep_dur]
 
-                            # add sleep task - [task, priority, current turn, max turn]
-                            if self.rest[0] < self.rest[1] * .1:   # <10%
-                                sleep = ["sleep", 1, 0, self.sleep_dur]
+                    elif self.rest[0] < self.rest[1] * .4:   # <40%
+                        sleep = ["sleep", 3, 0, self.sleep_dur]
 
-                            elif self.rest[0] < self.rest[1] * .3:   # <30%
-                                sleep = ["sleep", 2, 0, self.sleep_dur]
-
-                            elif self.rest[0] < self.rest[1] * .4:   # <40%
-                                sleep = ["sleep", 3, 0, self.sleep_dur]
-
-                            self.task_q.append(sleep)   
+                    self.task_q.append(sleep)   
 
             check_current_rest()
 
             def check_current_satiety():
-
-                if self.active_task == []:
+                if self.active_task == "eat":
                     pass
-                
+
                 else:
-                    if self.active_task[0] == "eat":
-                        pass
+                    # if satiety less than 40%
+                    if self.satiety[0] < self.satiety[1] * .4:
+                        
+                        # remove old eat tasks from task_q if present
+                        def remove_old_eats():
+                            logthis.logger.debug("remove_old_eats")
 
-                    else:
-                        # if satiety less than 40%
-                        if self.satiety[0] < self.satiety[1] * .4:
-                            
-                            # remove old eat tasks from task_q if present
-                            def remove_old_eats():
-                                logthis.logger.debug("remove_old_eats")
+                            if self.task_q == []:
+                                pass
 
-                                if self.task_q == []:
-                                    pass
+                            else:
+                                for i in self.task_q:
+                                    if i[0] == "eat":
+                                        self.task_q.remove(i)
 
-                                else:
-                                    for i in self.task_q:
-                                        if i[0] == "eat":
-                                            self.task_q.remove(i)
+                        remove_old_eats()
 
-                            remove_old_eats()
+                        # add eat task - [task, priority, current turn, max turn]
+                        if self.satiety[0] < self.satiety[1] * .1:   # <10%
+                            eat = ["eat", 1, 0, 6]
 
-                            # add eat task - [task, priority, current turn, max turn]
-                            if self.satiety[0] < self.satiety[1] * .1:   # <10%
-                                eat = ["eat", 1, 0, 6]
+                        elif self.satiety[0] < self.satiety[1] * .3:   # <30%
+                            eat = ["eat", 2, 0, 6]
 
-                            elif self.satiety[0] < self.satiety[1] * .3:   # <30%
-                                eat = ["eat", 2, 0, 6]
+                        elif self.satiety[0] < self.satiety[1] * .4:   # <40%
+                            eat = ["eat", 3, 0, 6]
 
-                            elif self.satiety[0] < self.satiety[1] * .4:   # <40%
-                                eat = ["eat", 3, 0, 6]
+                        self.task_q.append(eat) 
 
-                            self.task_q.append(eat) 
-
-                        # if satiety is not less than 40%    
-                        else: pass
+                    # if satiety is not less than 40%    
+                    else: pass
 
             check_current_satiety()
 
 
-        # checks active task for empty or completion
+        # checks active task for existence or completion
         def check_active_task(self):
             logthis.logger.debug("check_active_task")
+
+            # clear task from q if completed
+            if self.active_task[2] >= self.active_task[3]:
+                self.active_task.clear()
             
             if self.active_task == []:
 
@@ -162,38 +150,41 @@ class Creature:
                 def get_new_task(self):
                     logthis.logger.debug("get_new_task")
 
-                    duration = random.randint(1,8)
-
-                    p1,p2,p3 = [],[],[]
-
-                    for i in self.task_q:
-                        if i[1] == 1: p1.append(i)
-                        elif i[1] == 2: p2.append(i)
-                        else: p3.append(i)
-
-                    if p1 != []: x = random.choice(p1)
-                    elif p2 != []: x = random.choice(p2)
-                    elif p3 != []: x = random.choice(p3)
-                    else: x = ["wander", 3, 0, duration]
-
-                    try:
-                        self.task_q.remove(x)
-                    except Exception as e:
+                    #if task_q is empty, pass
+                    x = bool(self.task_q)
+                    if x == False:
                         pass
+                    else:
+                        duration = random.randint(1,8)
 
-                    return x
+                        p1,p2,p3 = [],[],[]
+
+                        for i in self.task_q:
+                            if i[1] == 1: p1.append(i)
+                            elif i[1] == 2: p2.append(i)
+                            else: p3.append(i)
+
+                        if p1 != []: x = random.choice(p1)
+                        elif p2 != []: x = random.choice(p2)
+                        elif p3 != []: x = random.choice(p3)
+                        else: x = ["wander", 3, 0, duration]
+
+                        try:
+                            self.task_q.remove(x)
+                        except Exception as e:
+                            pass
+
+                        return x
 
                 self.active_task = get_new_task(self)
-
-            elif self.active_task[2] == self.active_task[3]:
-                self.active_task = []
                        
 
         def increment_active_task(self):
             logthis.logger.debug("increment_active_task")
 
             #if active_task is empty, pass
-            if self.active_task == []:
+            x = bool(self.task_q)
+            if x == False:
                 pass
 
             else:
@@ -243,7 +234,7 @@ class Creature:
                 self.satiety[0] = self.satiety[1]
 
                 #instead of this, remove from active task
-                self.active_task = []
+                self.active_task[2] = self.active_task[3]
 
         def cover_old_sprite(self):
             logthis.logger.debug("cover_old_sprite")
@@ -295,17 +286,17 @@ class Creature:
     
 
         # OTHER
-        def update_viewport(self):
-            logthis.logger.debug("update_viewport")
-            game_setup.game_display.blit(self.img, self.world_coords)
-            pygame.display.update()
+        # def update_viewport(self):
+        #     logthis.logger.debug("update_viewport")
+        #     game_setup.game_display.blit(self.img, self.world_coords)
+        #     pygame.display.update()
 
         increment_turn(self)
         trigger_tasks(self)
         check_active_task(self)
         increment_active_task(self)
 
-        update_viewport(self)
+        # update_viewport(self)
 
 
 
@@ -332,7 +323,7 @@ def generate_creature(creature_type):
     speed = species.bestiary[creature_type]["speed"]
     
     satiety_mx = species.bestiary[creature_type]["satiety"]
-    satiety = [41, satiety_mx]
+    satiety = [satiety_mx, satiety_mx]
 
     hostility_mx = species.bestiary[creature_type]["hostility"]   
     hostility = [hostility_mx, hostility_mx]
@@ -376,4 +367,5 @@ def get_random_creature_type():
     return f
 
 
-
+x =species.generate_species()
+generate_creature(x)

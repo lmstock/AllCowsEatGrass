@@ -15,21 +15,29 @@ import pprint
 def get_game_info():
     with open('aceg_logs\\gamefile.txt', 'w') as game_info:
 
-        turn = str(game_setup.turn)
+        turn = str(game_setup.w.current_tick)
         game_info.write(turn)
         game_info.write('\n\n')
 
         b = pprint.pformat(species.bestiary)
+        game_info.write("bestiary\n")
         game_info.write(str(b))
         game_info.write('\n\n')
 
         p = pprint.pformat(scheduler.population)
+        game_info.write("population\n")
         game_info.write(str(p))
+        game_info.write('\n\n')
 
         p = pprint.pformat(flora_species.herbarium)
+        game_info.write("flora species\n")
         game_info.write(str(p))
+        game_info.write('\n\n')
 
-        reporter.write_html(str(b))
+        p = pprint.pformat(scheduler.flora_population)
+        game_info.write("flora population\n")
+        game_info.write(str(p))
+        game_info.write('\n\n')
 
 
 

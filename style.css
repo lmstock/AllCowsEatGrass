@@ -2,3 +2,26 @@ body {
     font-style: normal;
     font: 1em sans-serif;
 }
+
+h2 {
+    font: bold;
+}
+
+table, th, td {
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    
+}
+
+th {
+    font: bold;
+}
+
+table {
+    width: 75%;
+}
+
+.table_label {
+    color: grey;
+    font: bold;
+}
