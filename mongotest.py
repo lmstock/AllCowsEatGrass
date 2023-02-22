@@ -1,12 +1,12 @@
 from pymongo import MongoClient
-import log_this
+import archive_tests.archiveLogger as archiveLogger
 
 c = MongoClient()
 
 db = c['gladeData']
 
 def add_species(sp):
-    log_this.logger.info("add_species")
+    archiveLogger.logger.info("add_species")
 
     species = db.species
     post_id = species.insert_one(sp).inserted_id

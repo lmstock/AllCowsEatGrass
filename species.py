@@ -1,5 +1,4 @@
 import random
-import pprint
 
 from dataclasses import dataclass, field
 from itertools import count
@@ -62,27 +61,29 @@ class Species:
 
     name: str 
     img: str
-    img_bg: str
     head: str
     size: str
     body_type: str
     
     # sleep info
+    rest: list  # fully rested
     sleep_duration: float
-    max_rest: float  # fully rested
     rest_gain: float  # rest gained per turn sleeping
     base_fatigue: float  # rest lost per turn awake
+    
 
-    satiety: tuple
-    hostility: tuple
-    health: tuple
-    energy: tuple
+    satiety: list # (current satiety, loss per turn, max satiety)
+    energy: list # (current, max)  
 
-    # movement info
-    speed: float = 1
+    hostility: list
+    health: list
+
+    speed: list
+    fov: int = 1000
 
     species_id: int = field(default_factory=count().__next__)
-    
+    age: int = 0
+
 
 def generate_species():
     logthis.logger.info("generate_species")
@@ -95,43 +96,45 @@ def generate_species():
     # select image
     species_images = imgs.choose_img(size)
     species_img = species_images[0]
-    species_img_bg = species_images[1]
 
     s = gen_sleep_habits()
 
+    rest = [s[1], s[1]]
     sleep_duration = s[0]
-    max_rest = s[1]
     rest_gain = s[2]
     base_fatigue = s[3]
 
-    satiety_max = 100
-    hostility_max = 100
-    health_max = 100
-    energy_max = 100
+    satiety = [100, 100]
+    hostility = [100, 100]
+    health = [100, 100]
+    energy = [100, 100]
 
-    speed = core.roll(15,10)
-
+    speed_base = core.roll(15,10)
+    speed = [round(speed_base*.5,2),speed_base,speed_base*3,speed_base*6]
+    fov = 1000
 
 
     # generate new species object
     new_species = Species(
         name,
         species_img,
-        species_img_bg,
         head, 
         size,
         body_type, 
-        sleep_duration,
 
-        max_rest,
+        rest,
+        sleep_duration,
         rest_gain,
         base_fatigue,
         
-        satiety_max,
-        hostility_max,
-        health_max,
-        energy_max,
-        speed)
+        satiety,
+        energy,
+        
+        hostility,
+        health,
+        
+        speed,
+        fov)
 
     # add to bestiary
     species_data = new_species.__dict__

@@ -5,7 +5,7 @@ import pygame
 from dataclasses import dataclass, field
 from itertools import count
 
-from game_setup import *
+from game_conf import *
 from core import *
 
 grass_img = pygame.image.load('grass.png')

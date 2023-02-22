@@ -1,6 +1,8 @@
 import random
-import game_setup
+import game_conf
 import logthis
+
+
 
 
 
@@ -17,13 +19,10 @@ def roll(d,s):
 
 def random_coords():
     logthis.logger.debug("random_coords")
-    x = roll(2, game_setup.display_width / 2)
-    y = roll(2, game_setup.display_height / 2)
+    x = roll(2, game_conf.g.display_width / 2)
+    y = roll(2, game_conf.g.display_height / 2)
     coord = (x,y)
     return coord
-
-
-
 
 
 

@@ -1,7 +1,12 @@
 import species
+import game_conf
+
+
 import flora_species
 import scheduler
-import game_setup
+
+
+
 
 
 
@@ -20,7 +25,7 @@ file_path = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium.html
 
 r_bestiary_headers = ["species_id", "name", "head", "size", "body_type", "max_rest", "base_fatigue", "rest_gain", "speed"]
 r_herbarium_headers = ["species_id", "name", "size", "type", "energy", "growth_data"]
-r_population_headers = ["creature_id", "type", "age", "rest", "satiety", "health", "energy", "world_coords", "task_q", "active_task"]
+r_population_headers = ["creature_id", "type", "age", "rest", "satiety", "health", "energy", "fov", "world_coords", "task_q", "active_task"]
 r_flora_population_headers = ["flora_id", "type", "age", "energy", "coords"]
 
 
@@ -45,7 +50,7 @@ def body_html(file_path, title):
         dash.write(
             "\t<body>\n"
             "\t\t<h1>" + title + "</h1>\n"  
-            "\t\t<p> current_tick:  " + str(game_setup.w.current_tick) + "</p>\n"
+            "\t\t<p> current_tick:  " + str(game_conf.g.current_tick) + "</p>\n"
         )
 
 def append_html_tables(file_path, this_dict, header_list, table_name):
@@ -94,7 +99,7 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
         
 def write_html():
 
-    if game_setup.w.current_tick < 5:
+    if game_conf.g.current_tick < 5:
         pass
     else: 
 

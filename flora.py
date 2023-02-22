@@ -6,7 +6,7 @@ from itertools import count
 
 import logthis
 import scheduler
-import game_setup
+import game_conf
 import flora_species
 import core
 
@@ -41,7 +41,7 @@ class Flora:
 
         def update_viewport(self):
             logthis.logger.debug("update_viewport")
-            game_setup.game_display.blit(self.img, self.coords)
+            game_conf.g.game_display.blit(self.img, self.coords)
             pygame.display.update()
 
         increment_turn(self)

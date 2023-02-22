@@ -1,6 +1,6 @@
 import species
 import scheduler
-import game_setup
+import game_conf
 import flora_species
 import reporter
 
@@ -15,7 +15,7 @@ import pprint
 def get_game_info():
     with open('aceg_logs\\gamefile.txt', 'w') as game_info:
 
-        turn = str(game_setup.w.current_tick)
+        turn = str(game_conf.g.current_tick)
         game_info.write(turn)
         game_info.write('\n\n')
 

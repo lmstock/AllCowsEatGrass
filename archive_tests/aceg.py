@@ -4,7 +4,7 @@ import pprint
 import species
 import creature
 import scheduler
-import game_setup
+import game_conf
 import logthis
 import core
 
@@ -101,5 +101,5 @@ def main(turn, running):
 
             
 
-main(game_setup.turn, game_setup.running)
+main(game_conf.turn, game_conf.running)
 

@@ -8,8 +8,8 @@ import names
 import logthis
 import scheduler
 import game_imgs.imgs as imgs
-import core
-import world
+
+
 import game_imgs.flora.plant_imgs
 
 herbarium = {}
