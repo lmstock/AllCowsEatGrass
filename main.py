@@ -9,7 +9,7 @@ import to_file
 import reporter
 import species
 import flora_species
-import test_cret
+import mongotest
 
 
 from pygame.locals import (
@@ -36,23 +36,25 @@ phase1 -
     eating
 """
 
+# clear old data from db
+mongotest.clear_db()
 
 
 def generate_random_populus():
     for i in range(1,5):
         flora_species.generate_flora_species()
 
-    for i in range(1,25):
+    for i in range(1,15):
         flora.generate_flora(flora.get_random_flora_type())
 
-    for i in range(1,4):
+    for i in range(1,5):
         species.generate_species()
 
-    for i in range(1,25):
+    for i in range(1,15):
         creature.generate_creature(creature.get_random_creature_type())
 
 generate_random_populus()
-#test_cret.gen_test_crets()
+
 
 
 # game 
@@ -67,6 +69,7 @@ def main (running):
         scheduler.scheduler_run()
         pygame.display.update()
         reporter.write_html()
+        
 
         # Event Handler
         for event in pygame.event.get():

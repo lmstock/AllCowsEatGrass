@@ -45,12 +45,12 @@ cret7_large=pygame.image.load('game_imgs\\cret7_large.png')
 cret7_very_large=pygame.image.load('game_imgs\\cret7_very_large.png')
 cret7_mega=pygame.image.load('game_imgs\\cret7_mega.png')
 
-bg_sprite_tiny = pygame.image.load('game_imgs\\bg_sprite_tiny.png')
-bg_sprite_small = pygame.image.load('game_imgs\\bg_sprite_small.png')
-bg_sprite_medium = pygame.image.load('game_imgs\\bg_sprite_medium.png')
-bg_sprite_large = pygame.image.load('game_imgs\\bg_sprite_large.png')
-bg_sprite_very_large = pygame.image.load('game_imgs\\bg_sprite_very_large.png')
-bg_sprite_mega = pygame.image.load('game_imgs\\bg_sprite_mega.png')
+# bg_sprite_tiny = pygame.image.load('game_imgs\\bg_sprite_tiny.png')
+# bg_sprite_small = pygame.image.load('game_imgs\\bg_sprite_small.png')
+# bg_sprite_medium = pygame.image.load('game_imgs\\bg_sprite_medium.png')
+# bg_sprite_large = pygame.image.load('game_imgs\\bg_sprite_large.png')
+# bg_sprite_very_large = pygame.image.load('game_imgs\\bg_sprite_very_large.png')
+# bg_sprite_mega = pygame.image.load('game_imgs\\bg_sprite_mega.png')
 
 
 
@@ -121,38 +121,32 @@ def choose_img(size):
         case "tiny":
             x = random.choice(cret_pool_tiny)
             cret_pool_tiny.remove(x)
-            y = bg_sprite_tiny
-            return x, y
+            return x
         
         case "small":
             x = random.choice(cret_pool_small)
             cret_pool_small.remove(x)
-            y = bg_sprite_small
-            return x, y
+            return x
         
         case "medium":
             x = random.choice(cret_pool_medium)
             cret_pool_medium.remove(x)
-            y = bg_sprite_medium
-            return x, y
+            return x
         
         case "large":
             x = random.choice(cret_pool_large)
             cret_pool_large.remove(x)
-            y = bg_sprite_large
-            return x, y
+            return x
         
         case "very_large":
             x = random.choice(cret_pool_very_large)
             cret_pool_very_large.remove(x)
-            y = bg_sprite_very_large
-            return x, y
+            return x
         
         case "mega":
             x = random.choice(cret_pool_mega)
             cret_pool_mega.remove(x)
-            y = bg_sprite_mega
-            return x, y
+            return x
 
 
 

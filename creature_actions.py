@@ -35,9 +35,9 @@ def eat(x):
     x.satiety[0] = round(x.satiety[0] + 15, 2)  # 10 is just a guess food input
 
     # do not exceed max_rest remove from active task if full
-    if x.satiety[0] >= x.satiety[1]:
+    if x.satiety[0] >= x.satiety[2]:
 
-        x.satiety[0] = x.satiety[1]
+        x.satiety[0] = x.satiety[2]
 
         #instead of this, remove from active task
         x.active_task = []

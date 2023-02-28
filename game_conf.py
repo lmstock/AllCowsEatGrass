@@ -14,13 +14,14 @@ class Game_config:
     white: tuple = (255,255,255)
     bg_color = white
     current_tick: int = 50
+    ticks_per_day = 1000
     clock=pygame.time.Clock()
     clock.tick(.5)
     pygame.display.set_caption("clockmaker")
 
 
     def increment_tick(self):
-        msg = "Current Tick: ", self.current_tick + 1
+        msg = "Current Tick: " + str(self.current_tick + 1)
         logthis.logger.info(msg)
         self.clock.tick(.5)
         self.current_tick = self.current_tick + 1

@@ -18,7 +18,7 @@ ch.setLevel(logging.DEBUG)
 
 # create formatter and add it to the handlers
 # formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-formatter2 = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+formatter2 = logging.Formatter('%(name)s - %(levelname)s - %(message)s  -(%(filename)s:%(lineno)d)')
 ch.setFormatter(formatter2)
 # fh.setFormatter(formatter)
 

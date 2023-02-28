@@ -36,9 +36,12 @@ def scheduler_run():
     random.shuffle(actors)
     
     for i in flora_actors:
+        # get i from db
         i.action()
+        
 
     for i in actors:
+        # get i from db
 
         # prints additional self info to terminal
         b = {
@@ -60,7 +63,7 @@ def scheduler_run():
 
 
     # If newly created creatures are added to the actors list on the same turn as
-    # they are created, something bad happened but I dont remember what..
+    # they are created, the list grows uncontrollably but i forget why..
     
     def empty_waiting_room():
         logthis.logger.debug("empty_waiting_room")

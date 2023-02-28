@@ -1,7 +1,10 @@
 from PIL import Image
 
 # change a 30X30 image to various sizes for image pools of different sized creatures
-
+# add 30x30 pngs to the filenames in img_pool
+# click go, hope for the best!
+# make sure you are in game_imgs directory
+# make sure to create all in pool
 
 img_pool = [
     "cret1.png",
