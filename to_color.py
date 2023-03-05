@@ -1,6 +1,7 @@
 class Colors:
 
 
+
 # '''Colors class:reset all colors with colors.reset; two
 # sub classes fg for foreground
 # and bg for background; use as colors.subclass.colorname.

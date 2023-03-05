@@ -1,84 +1,30 @@
-import logthis
+import archive_tests.logthis as logthis
 import random
+import mongotest
+import creature
+import flora
 
-
-# creatures
-
-# census data on every creature
-population = {}
-
-# list of creatures by creature id
-actors = []
-
-# creatures sent here after creation 
-# to be added to actors on following turn
-waiting_room = []
-
-# flora
-
-# census data on every generated flora
-flora_population = {}
-
-# list of flora by flora id
-flora_actors = []
-
-# flora sent here after creation
-# to be added to flora actors on following turn
-green_room = []
 
 
 # scheduler runs once a turn and sets each actor to their tasks
 def scheduler_run():
     logthis.logger.debug("scheduler_run")
 
-    # shuffle lists
-    random.shuffle(flora_actors)
-    random.shuffle(actors)
-    
-    for i in flora_actors:
-        # get i from db
-        i.action()
-        
+    # pull list of population -id from db
+    p = mongotest.get_population()
 
-    for i in actors:
-        # get i from db
+    for i in p:
 
-        # prints additional self info to terminal
-        b = {
-            "p": i.creature_id,
-            "type": i.type,
-            #"sze": i.size,
-            #"satiety": i.satiety,
-            #"rest": i.rest,
-            "tsk_q": i.task_q,
-            "actve_tsk": i.active_task,
-            "speed": i.speed,
-            "fov": i.fov,
-            "coords": i.world_coords
-        }
-        
-        #print(b)
-        i.action()
+        x = mongotest.read_individual_byid(i)   # x = cursor object
+        for j in x:
+            creature.creature_action(j)
 
 
+    # pull list of population -id from db
+    f = mongotest.get_flora_population()
 
-    # If newly created creatures are added to the actors list on the same turn as
-    # they are created, the list grows uncontrollably but i forget why..
-    
-    def empty_waiting_room():
-        logthis.logger.debug("empty_waiting_room")
-        for i in waiting_room:
-            actors.append(i)
-        waiting_room.clear()
-        
-    empty_waiting_room()
-    
+    for k in f:
 
-    def empty_green_room():
-        logthis.logger.debug("empty_green_room")
-        for i in green_room:
-            flora_actors.append(i)
-        green_room.clear()
-
-    empty_green_room()
-
+        ind = mongotest.read_flora_ind_byid(k)   # ind = cursor object
+        for l in ind:
+            flora.flora_action(l)

@@ -1,20 +1,34 @@
 
-import logthis
+import archive_tests.logthis as logthis
 
 
 # UPDATE ATTRIBUTES THAT CHANGE EACH TURN
 def increment_turn(s):
     logthis.logger.debug("increment_turn")
 
-    
-    if s.active_task == []:
-        pass
-    
-    else:
-        if s.active_task[0] != "sleep":
-            s.rest[0] = round(s.rest[0] + s.base_fatigue, 2)
+    active_task = s['active_task']
+    rest = s['rest']
+    satiety = s['satiety']
+    age = s['age']
+    base_fatigue = s['base_fatigue']
 
-        if s.active_task[0] != "eat":
-            s.satiety[0] = round(s.satiety[0] + s.satiety[1], 2)
+
+    if active_task == []:
+        rest[0] = round(rest[0] + base_fatigue, 2)
+        satiety[0] = round(satiety[0] + satiety[1], 2)
+    
+    elif active_task[0] != "sleep":
+        rest[0] = round(rest[0] + base_fatigue, 2)
+
+    elif active_task[0] != "eat":
+        satiety[0] = round(satiety[0] + satiety[1], 2)
         
-        s.age = round(s.age + .0000025, 7)
+    age = round(age + .0000025, 7)
+
+    s['active_task'] = active_task
+    s['rest'] = rest
+    s['satiety'] = satiety
+    s['age'] = age
+    s['base_fatigue'] = base_fatigue
+
+    return s

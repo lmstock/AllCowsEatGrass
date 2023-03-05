@@ -1,6 +1,6 @@
 import random
 
-import logthis
+import archive_tests.logthis as logthis
 
 
 # this is an old name generator that I made several years back and could use tidied up.

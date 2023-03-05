@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-import logthis    
+import archive_tests.logthis as logthis    
 import pygame
 
 
@@ -61,14 +61,3 @@ class Game_config:
 g = Game_config()
 g.start_game()
 
-
-
-# creating a clock object
-#clock=pygame.time.Clock()
-
-#game_display = pygame.display.set_mode((display_width, display_height))
-
-#game_display.fill(bg_color) 
-
-
-#pygame.display.update()

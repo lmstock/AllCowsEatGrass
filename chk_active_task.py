@@ -1,5 +1,5 @@
 
-import logthis
+import archive_tests.logthis as logthis
 import random
 
 import game_conf
@@ -11,8 +11,11 @@ import game_conf
 # checks active task for empty or completion
 def check_active_task(s):
     logthis.logger.debug("check_active_task")
+
+    active_task = s['active_task']
+    task_q = s['task_q']
     
-    if s.active_task == []:
+    if active_task == []:
 
         # if no active task, get one
         def get_new_task(s):
@@ -22,7 +25,7 @@ def check_active_task(s):
 
             p1,p2,p3 = [],[],[]
 
-            for i in s.task_q:
+            for i in task_q:
                 if i[1] == 1: p1.append(i)
                 elif i[1] == 2: p2.append(i)
                 else: p3.append(i)
@@ -35,15 +38,20 @@ def check_active_task(s):
                     x = ["wander", 3, 0, duration]
                 else: x = ["play", 3, 0, duration]
             try:
-                s.task_q.remove(x)
+                task_q.remove(x)
             except Exception as e:
                 pass
 
             return x
 
-        s.active_task = get_new_task(s)
+        active_task = get_new_task(s)
 
-    elif s.active_task[2] == s.active_task[3]:
-        s.active_task = []
+    elif active_task[2] == active_task[3]:
+        active_task = []
+
+    s['active_task'] = active_task
+    s['task_q'] = task_q
+
+    return s
                 
 

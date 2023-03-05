@@ -4,10 +4,10 @@ import game_conf
 import creature
 import flora
 import scheduler
-import logthis
+import archive_tests.logthis as logthis
 import to_file
 import reporter
-import species
+import creature_species
 import flora_species
 import mongotest
 
@@ -26,38 +26,24 @@ from pygame.locals import (
 )
 
 
-"""
-phase1 -   
-    movement
-    sleep
-    viewport
-
-    flora
-    eating
-"""
-
-# clear old data from db
-mongotest.clear_db()
 
 
-def generate_random_populus():
-    for i in range(1,5):
-        flora_species.generate_flora_species()
+#clear old data from db
+# mongotest.clear_db()
 
-    for i in range(1,15):
-        flora.generate_flora(flora.get_random_flora_type())
+# for i in range(1,5):
+#     creature_species.generate_creature_species()
 
-    for i in range(1,5):
-        species.generate_species()
+# for i in range(1,5):
+#     flora_species.generate_flora_species()
 
-    for i in range(1,15):
-        creature.generate_creature(creature.get_random_creature_type())
+# for i in range(1,5):
+#     flora.generate_flora(flora.get_random_flora_type())
 
-generate_random_populus()
+# for i in range(1,5):
+#     creature.generate_creature(creature.get_random_creature_type())
 
-
-
-# game 
+# # game 
 def main (running):
     logthis.logger.debug("main")
 
@@ -68,7 +54,7 @@ def main (running):
         game_conf.g.game_display.fill(game_conf.g.get_bg_color()) 
         scheduler.scheduler_run()
         pygame.display.update()
-        reporter.write_html()
+        #reporter.write_html()
         
 
         # Event Handler

@@ -16,6 +16,15 @@ img_pool = [
     "cret7.png"
 ]
 
+flor_pool = [
+    "flor1.png",
+    "flor2.png",
+    "flor3.png",
+    "flor4.png",
+    "flor5.png",
+    "flor6.png",
+    "flor7.png"
+]
 
 sizes = {
     "tiny": 5,
@@ -26,7 +35,7 @@ sizes = {
     "mega": 30
 }
 
-for file in img_pool:
+for file in flor_pool:
     for k,v in sizes.items():
 
         namestring = file.split(".")

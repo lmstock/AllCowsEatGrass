@@ -4,78 +4,76 @@ import pygame
 from dataclasses import dataclass, field
 from itertools import count
 
-import logthis
+import archive_tests.logthis as logthis
+import mongotest
 import scheduler
 import game_conf
 import flora_species
 import core
+import game_imgs.flor_imgs as flor_imgs
 
 
-@dataclass
-class Flora:
-    type: str
-    img: str
-    #bg_img: str
-    size: str
-    energy: int
-    growth_data: list
-    coords: list[int] 
 
-    flora_id: int = field(default_factory=count().__next__)
-    
-    age: int = 0
+# checks on what the individual is doing each turn
+def flora_action(self):
+    logthis.logger.debug("action")
 
+    def increment_turn(f):
+        logthis.logger.debug("increment_turn")
 
-    # checks on what the individual is doing each turn
-    def action(self):
-        logthis.logger.debug("action")
+        # update attributes that change each turn
+        f['age'] = round(f['age'] + .01, 2)
+        return f
 
-        def increment_turn(self):
-            logthis.logger.debug("increment_turn")
+    def grow(f):
+        logthis.logger.debug("grow")
+        return f
 
-            # update attributes that change each turn
-            self.age = round(self.age + .01, 2)
+    def update_viewport(f):
+        logthis.logger.info("update_viewport")
+        coords = (f['x'],f['y'])
+        img_index = int(f['img'])
 
-        def grow(self):
-            logthis.logger.debug("grow")
+        x = flor_imgs.flors_list[img_index]
+        game_conf.g.game_display.blit(x, coords)
+        pygame.display.update()
 
-        def update_viewport(self):
-            logthis.logger.debug("update_viewport")
-            game_conf.g.game_display.blit(self.img, self.coords)
-            pygame.display.update()
-
-        increment_turn(self)
-        grow(self)
-        update_viewport(self)
+    a = increment_turn(self)
+    b = grow(a)
+    update_viewport(b)
         
 
 def generate_flora(flora_type):
-    logthis.logger.debug("generate flora")
+    logthis.logger.info("generate flora")
 
-    my_img = flora_species.herbarium[flora_type]["img"]
-    my_size = flora_species.herbarium[flora_type]["size"]
-    
-    get_coords = core.random_coords()
+    s = mongotest.read_flora_species("flora_type", flora_type)
+    x = random.randint(0,250)
+    y = random.randint(0,250)
 
-    
-    new_flora = Flora (
-        flora_type,
-        my_img,
-        my_size,
-        energy = 100,
-        growth_data = [],
-        coords = get_coords
-)
+    # iterate through with i
+    for i in s:
+        print(i)
 
-    logthis.logger.info(new_flora)
+    # add to db
+    new_flora = {
+        "flora_species_type": i["flora_species_type"],
+        "size": i["size"],
+        "flora_type": i["flora_type"],
+        "energy": i["energy"],
+        "growth_data": i["growth_data"],   
+        "x": x,
+        "y": y,
+        "age": 0,
+        "img": i['img']
 
-    # add to green room
-    new_flora_data = new_flora.__dict__
-    scheduler.flora_population[new_flora.flora_id] = new_flora_data
-    scheduler.green_room.append(new_flora)
+    }
+
+
+    mongotest.add_flora(new_flora)
+
 
 def get_random_flora_type():
     logthis.logger.debug("get_random_flora_type")
-    f = random.choice(flora_species.herbarium_names)
-    return f
+    return random.choice(mongotest.list_flora())
+
 

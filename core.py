@@ -1,6 +1,6 @@
 import random
 import game_conf
-import logthis
+import archive_tests.logthis as logthis
 
 
 
