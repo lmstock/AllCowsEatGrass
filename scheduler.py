@@ -9,6 +9,7 @@ import flora
 # scheduler runs once a turn and sets each actor to their tasks
 def scheduler_run():
     logthis.logger.debug("scheduler_run")
+    hist_data_update = []
 
     # pull list of population -id from db
     p = mongotest.get_population()
@@ -17,7 +18,15 @@ def scheduler_run():
 
         x = mongotest.read_individual_byid(i)   # x = cursor object
         for j in x:
-            creature.creature_action(j)
+
+            # returns dict of historical data for each cret
+            hist_data = creature.creature_action(j)
+
+            # add hist_data to list
+            hist_data_update.append(hist_data)
+
+
+        
 
 
     # pull list of population -id from db
@@ -28,3 +37,7 @@ def scheduler_run():
         ind = mongotest.read_flora_ind_byid(k)   # ind = cursor object
         for l in ind:
             flora.flora_action(l)
+
+
+    # add hist data to collection
+    mongotest.add_historical_data(hist_data_update)

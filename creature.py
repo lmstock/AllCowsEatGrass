@@ -25,7 +25,25 @@ def creature_action(s):
 
     update_viewport(w)
 
+    # try batch update historical data for creature
+    def get_batch_update(w):
+        update_list = {
+            "objID": w['_id'],
+            "tick": game_conf.g.current_tick,
+            "species": w['species_type'],
+            "rest": w['rest'],
+            "satiety": w['satiety'],
+            "energy": w['energy'],
+            "hostility": w['hostility'],
+            'health': w['health'],
+            'active_task': w['active_task'],
+            'x': w['x'],
+            "y": w['y']
+        }
+        return update_list
 
+    batch_update = get_batch_update(w)
+    return batch_update
 
 # OTHER
 def update_viewport(w):
@@ -80,7 +98,8 @@ def generate_creature(creature_type):
     # type: [observation count, investigation count, reaction code]  ## .5 knowledge indicates own species
     "knowledge_base": {creature_type: [.5, .5, 1]},
     
-    "interrupt": []
+    "interrupt": [],
+    "is_alive": True
     }
     
 

@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import logger2
+import game_conf
 
 
 c = MongoClient()
@@ -30,7 +31,18 @@ def clear_db():
     db.population.drop()
     db.herbarium.drop()
     db.flora_pop.drop()
+    #db.history.drop()
 
+def manage_hist():
+    logger2.logger.info("manage_hist")
+    now_tick = game_conf.g.current_tick - 100
+    print(now_tick)
+    a = "tick"
+
+    try:
+        db.history.delete_many( { a : { "$lt" : now_tick }})
+    except Exception as e:
+        logger2.logger.info(e)
 
 def list_beasts():
     logger2.logger.info("list_beasts")
@@ -47,6 +59,26 @@ def list_flora():
     for i in flora:
         flora_list.append(i['flora_type'])
     return flora_list
+
+def get_bestiary():
+    logger2.logger.info("get_bestiary")
+    beasts = db.bestiary.find()
+    bestiary = {}
+    for i in beasts:
+        bestiary.update({i['species_type']:i})
+    logger2.logger.info(bestiary)
+    return bestiary
+
+def get_herbarium():
+    logger2.logger.info("get_herbarium")
+    flora = db.herbarium.find()
+    herbarium = {}
+    for i in flora:
+        herbarium.update({i['flora_species_type']:i})
+    logger2.logger.info(herbarium)
+    return herbarium
+
+get_bestiary()
 
 def get_population():
     logger2.logger.info("get_population")
@@ -122,4 +154,8 @@ def update_cret_byid(id, update):
 
 
     # ===== TESTING =====
-
+def add_historical_data(batch_data):
+    logger2.logger.info("add_historical_data")
+    
+    # batch data is a list of dict items for mongo
+    db.history.insert_many(batch_data)

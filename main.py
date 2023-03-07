@@ -54,6 +54,7 @@ def main (running):
         game_conf.g.game_display.fill(game_conf.g.get_bg_color()) 
         scheduler.scheduler_run()
         pygame.display.update()
+        mongotest.manage_hist()
         #reporter.write_html()
         
 

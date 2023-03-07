@@ -12,11 +12,6 @@
 # style_sheet = "style.css"
 
 
-# r_bestiary = species.bestiary
-# r_herbarium = flora_species.herbarium
-# r_population = scheduler.population
-# r_flora_population = scheduler.flora_population
-
 # file_path = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium.html"
 
 # r_bestiary_headers = ["species_id", "name", "head", "size", "body_type", "rest", "base_fatigue", "rest_gain", "speed"]
@@ -40,6 +35,8 @@
 #             "\t</head>\n"
 #         )
 
+
+
 # def body_html(file_path, title):
 #     with open(file_path, "a") as dash:
 
@@ -48,6 +45,8 @@
 #             "\t\t<h1>" + title + "</h1>\n"  
 #             "\t\t<p> current_tick:  " + str(game_conf.g.current_tick) + "</p>\n"
 #         )
+
+
 
 # def append_html_tables(file_path, this_dict, header_list, table_name):
 #     with open(file_path, "a") as dash:
