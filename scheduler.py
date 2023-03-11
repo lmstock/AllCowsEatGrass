@@ -1,5 +1,4 @@
-import archive_tests.logthis as logthis
-import random
+import logger2
 import mongotest
 import creature
 import flora
@@ -8,7 +7,7 @@ import flora
 
 # scheduler runs once a turn and sets each actor to their tasks
 def scheduler_run():
-    logthis.logger.debug("scheduler_run")
+    logger2.logger.debug("scheduler_run")
     hist_data_update = []
 
     # pull list of population -id from db

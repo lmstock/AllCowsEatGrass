@@ -1,14 +1,15 @@
+import pygame
 import random
 
 import mongotest
-
-import archive_tests.logthis as logthis
-import inc_turn as it
+import logger2
+import inc_turn
 import triggers
 import chk_active_task
 import inc_active_task
 import game_conf
-import pygame
+
+
 import game_imgs.cret_imgs as cret_imgs
 
 
@@ -16,20 +17,20 @@ import game_imgs.cret_imgs as cret_imgs
 
 def creature_action(s):
 
-    t = it.increment_turn(s)
-    u = triggers.trigger_tasks(t)
-    v = chk_active_task.check_active_task(u)
-    w = inc_active_task.increment_active_task(v)
+    s = inc_turn.increment_turn(s)
+    s = triggers.trigger_tasks(s)
+    s = chk_active_task.check_active_task(s)
+    w = inc_active_task.increment_active_task(s)
 
-    mongotest.update_cret_byid(w['_id'], w)
-
+    hist_tracking(w, 20)
     update_viewport(w)
+    mongotest.update_cret_byid(w['_id'], w)
 
     # try batch update historical data for creature
     def get_batch_update(w):
         update_list = {
             "objID": w['_id'],
-            "tick": game_conf.g.current_tick,
+            "tick": game_conf.w.current_tick,
             "species": w['species_type'],
             "rest": w['rest'],
             "satiety": w['satiety'],
@@ -47,19 +48,46 @@ def creature_action(s):
 
 # OTHER
 def update_viewport(w):
-    logthis.logger.debug("update_viewport")
+    logger2.logger.debug("update_viewport")
     coords = (w['x'],w['y'])
     img_index = int(w['img'])
 
     x = cret_imgs.crets_list[img_index]
     
-    game_conf.g.game_display.blit(x, coords)
+    game_conf.w.game_display.blit(x, coords)
     pygame.display.update()
 
+    # hist_tracking(x, 'rest_track', x['rest'][0], 20)
+
+
+def hist_tracking(x, hist_duration):
+    logger2.logger.debug("hist_tracking")
+
+    x['rest_hist'].append(x['rest'][0])
+    if len(x['rest_hist']) > hist_duration:
+        x['rest_hist'].pop(0)
+
+    x['satiety_hist'].append(x['satiety'][0])
+    if len(x['satiety_hist']) > hist_duration:
+        x['satiety_hist'].pop(0)
+
+    x['energy_hist'].append(x['energy'][0])
+    if len(x['energy_hist']) > hist_duration:
+        x['energy_hist'].pop(0)
+    
+    x['hostility_hist'].append(x['hostility'][0])
+    if len(x['hostility_hist']) > hist_duration:
+        x['hostility_hist'].pop(0)
+
+    x['health_hist'].append(x['health'][0])
+    if len(x['health_hist']) > hist_duration:
+        x['health_hist'].pop(0)
+
+    return x
 
 # creates a creature from a species in db.bestiary
 def generate_creature(creature_type):
-    logthis.logger.debug("generate_creature")
+    logger2.logger.debug("generate_creature")
 
     # this will return cursor object
     s = mongotest.read_creature_species("species_type", creature_type)
@@ -99,7 +127,12 @@ def generate_creature(creature_type):
     "knowledge_base": {creature_type: [.5, .5, 1]},
     
     "interrupt": [],
-    "is_alive": True
+    "is_alive": True,
+    "rest_hist": [],
+    "satiety_hist": [],
+    "energy_hist": [],
+    "hostility_hist": [],
+    "health_hist": []
     }
     
 
@@ -107,7 +140,7 @@ def generate_creature(creature_type):
 
 
 def get_random_creature_type():
-    logthis.logger.debug("get_random_creature_type")
+    logger2.logger.debug("get_random_creature_type")
     return random.choice(mongotest.list_beasts())
     
 

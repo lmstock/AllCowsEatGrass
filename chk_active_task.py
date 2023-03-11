@@ -1,16 +1,12 @@
-
-import archive_tests.logthis as logthis
 import random
 
+import logger2
 import game_conf
-
-
-
 
 
 # checks active task for empty or completion
 def check_active_task(s):
-    logthis.logger.debug("check_active_task")
+    logger2.logger.debug("check_active_task")
 
     active_task = s['active_task']
     task_q = s['task_q']
@@ -19,7 +15,7 @@ def check_active_task(s):
 
         # if no active task, get one
         def get_new_task(s):
-            logthis.logger.debug("get_new_task")
+            logger2.logger.debug("get_new_task")
 
             duration = random.randint(1,8)
 

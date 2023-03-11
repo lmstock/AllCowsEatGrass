@@ -1,9 +1,9 @@
 
 import creature_actions as ca
-import archive_tests.logthis as logthis
+import logger2
 
 def increment_active_task(s):
-    logthis.logger.debug("increment_active_task")
+    logger2.logger.debug("increment_active_task")
 
     active_task = s['active_task']
 

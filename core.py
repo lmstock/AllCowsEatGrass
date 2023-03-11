@@ -1,6 +1,7 @@
 import random
+
 import game_conf
-import archive_tests.logthis as logthis
+import logger2
 
 
 
@@ -10,7 +11,7 @@ import archive_tests.logthis as logthis
 
 # d = dice, s = sides
 def roll(d,s):
-    logthis.logger.debug("roll")
+    logger2.logger.debug("roll")
     total = 0
     for i in range(1,d):    
         n = random.randint(1,s)
@@ -18,7 +19,7 @@ def roll(d,s):
     return total
 
 def random_coords():
-    logthis.logger.debug("random_coords")
+    logger2.logger.debug("random_coords")
     x = roll(2, game_conf.g.display_width / 2)
     y = roll(2, game_conf.g.display_height / 2)
     coord = (x,y)
@@ -31,7 +32,7 @@ def random_coords():
 ##you are going to want this...
 # marked for removal 2/11/23
 def coords_world_to_display(x,y):
-    logthis.logger.debug("coords_world_to_display")
+    logger2.logger.debug("coords_world_to_display")
     x = x * 30
     y = y * 30
     return x,y
@@ -39,7 +40,7 @@ def coords_world_to_display(x,y):
 
 # return a list of tiles surrounding a coord
 def get_surrounding_tiles(x, y, distance_away):
-    logthis.logger.debug("get_surrounding_tiles")
+    logger2.logger.debug("get_surrounding_tiles")
     distance = distance_away
     surrounding_tiles = []
 

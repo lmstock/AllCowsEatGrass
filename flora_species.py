@@ -1,11 +1,9 @@
 import random
 
-from dataclasses import dataclass, field
-from itertools import count
-
 import mongotest
 import names
-import archive_tests.logthis as logthis
+import logger2
+
 import game_imgs.flor_imgs
 
 
@@ -53,7 +51,7 @@ colors = [
 '''species is a template of a creature'''
 
 def generate_flora_species():
-    logthis.logger.info("generate_flora_species")
+    logger2.logger.info("generate_flora_species")
 
     flora_species_type = names.generate_name()
     size = random.choice(plant_size_pool)

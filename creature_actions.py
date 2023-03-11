@@ -1,16 +1,18 @@
 import random
-import pygame
 
-import archive_tests.logthis as logthis
-import game_conf
-import scheduler
+import logger2
+
+
+
+
+        
 
 
 
 
 
 def sleep(x):
-    logthis.logger.debug("sleep")
+    logger2.logger.debug("sleep")
 
     # increment current active_task
     x['active_task'][2] = x['active_task'][2] + 1
@@ -23,11 +25,13 @@ def sleep(x):
         x['rest'][0] = x['rest'][1]
 
         x['active_task'][2] = x['active_task'][3]
+
+
     return x
 
 
 def eat(x):
-    logthis.logger.debug("eat")
+    logger2.logger.debug("eat")
 
     # increment current turn in task list
     x['active_task'][2] = x['active_task'][2] + 1
@@ -47,7 +51,7 @@ def eat(x):
 
 
 def wander(x):
-    logthis.logger.debug("wander")
+    logger2.logger.debug("wander")
     x['active_task'][2] = x['active_task'][2] + 1
     speed = x['speed']
 
@@ -87,7 +91,7 @@ def wander(x):
 
 def nothing(x):
     # doing nothing brings you down :(
-    logthis.logger.debug("nothing")
+    logger2.logger.debug("nothing")
 
     #update task
     x['active_task'][2] = x['active_task'][2] + 1
@@ -96,7 +100,7 @@ def nothing(x):
 
 def observe(x):
     # observing fov and gathering knowledge
-    logthis.logger.debug("observe")
+    logger2.logger.debug("observe")
     pass
     
     # #update task
@@ -118,7 +122,7 @@ def observe(x):
         
 def investigate(x):
     # knowledge gathering
-    logthis.logger.debug("investigate")
+    logger2.logger.debug("investigate")
 
     #update task
     x['active_task'][2] = x['active_task'][2] + 1
@@ -126,7 +130,7 @@ def investigate(x):
     return x
 
 def play(x):
-    logthis.logger.debug("play")
+    logger2.logger.debug("play")
     x['active_task'][2] = x['active_task'][2] + 1
 
     speed = x['speed'] * 1.5

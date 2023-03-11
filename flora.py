@@ -1,50 +1,45 @@
 import random
 import pygame
 
-from dataclasses import dataclass, field
-from itertools import count
-
-import archive_tests.logthis as logthis
+import logger2
 import mongotest
-import scheduler
 import game_conf
-import flora_species
-import core
+
 import game_imgs.flor_imgs as flor_imgs
 
 
 
 # checks on what the individual is doing each turn
-def flora_action(self):
-    logthis.logger.debug("action")
+def flora_action(f):
+    logger2.logger.debug("action")
 
     def increment_turn(f):
-        logthis.logger.debug("increment_turn")
+        logger2.logger.debug("increment_turn")
 
         # update attributes that change each turn
         f['age'] = round(f['age'] + .01, 2)
         return f
 
     def grow(f):
-        logthis.logger.debug("grow")
+        logger2.logger.debug("grow")
         return f
 
     def update_viewport(f):
-        logthis.logger.info("update_viewport")
+        logger2.logger.debug("update_viewport")
         coords = (f['x'],f['y'])
         img_index = int(f['img'])
 
         x = flor_imgs.flors_list[img_index]
-        game_conf.g.game_display.blit(x, coords)
+        game_conf.w.game_display.blit(x, coords)
         pygame.display.update()
 
-    a = increment_turn(self)
-    b = grow(a)
-    update_viewport(b)
+    f = increment_turn(f)
+    f = grow(f)
+    update_viewport(f)
         
 
 def generate_flora(flora_type):
-    logthis.logger.info("generate flora")
+    logger2.logger.info("generate flora")
 
     s = mongotest.read_flora_species("flora_type", flora_type)
     x = random.randint(0,250)
@@ -73,7 +68,7 @@ def generate_flora(flora_type):
 
 
 def get_random_flora_type():
-    logthis.logger.debug("get_random_flora_type")
+    logger2.logger.debug("get_random_flora_type")
     return random.choice(mongotest.list_flora())
 
 

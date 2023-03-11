@@ -4,16 +4,25 @@ import mongotest
 
 
 # write html file with game data
+# titles
+compendium_title = "Alkows Compendium 2"
+pop_title = "Alkows Populuation Data 1"
 
-title = "Alkows Compendium 2"
+# css
 style_sheet = "style.css"
-file_path = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium3.html"
 
+# file paths
+compendium3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium3.html"
+
+# db functions
 pop = mongotest.get_population()
 bestiary = mongotest.get_bestiary()
 herbarium = mongotest.get_herbarium()
+
+# headers
 bestiary_headers = ["_id", "species_type", "head", "size", "body_type"]
 herbarium_headers = ["_id", "flora_species_type", "size", "energy", "growth_data"]
+
 
 # setup page
 def write_html_head(file_path, title, css):
@@ -118,8 +127,10 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
                 "<br>\n"
                 )
 
-write_html_head(file_path,title,style_sheet)
-body_html(file_path,title)
+write_html_head(compendium3,compendium_title,style_sheet)
+body_html(compendium3,compendium_title)
+
+append_html_tables(compendium3, bestiary, bestiary_headers, "bestiary")
+append_html_tables(compendium3, herbarium, herbarium_headers, "herbarium")
+
 table(pop)
-append_html_tables(file_path, bestiary, bestiary_headers, "bestiary")
-append_html_tables(file_path, herbarium, herbarium_headers, "herbarium")

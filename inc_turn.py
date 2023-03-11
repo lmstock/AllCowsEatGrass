@@ -1,10 +1,10 @@
 
-import archive_tests.logthis as logthis
+import logger2
 
 
 # UPDATE ATTRIBUTES THAT CHANGE EACH TURN
 def increment_turn(s):
-    logthis.logger.debug("increment_turn")
+    logger2.logger.debug("increment_turn")
 
     active_task = s['active_task']
     rest = s['rest']

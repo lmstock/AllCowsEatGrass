@@ -1,14 +1,8 @@
 import pygame
 
 import game_conf
-import creature
-import flora
 import scheduler
-import archive_tests.logthis as logthis
-import to_file
-import reporter
-import creature_species
-import flora_species
+import logger2
 import mongotest
 
 
@@ -27,35 +21,19 @@ from pygame.locals import (
 
 
 
-
-#clear old data from db
-# mongotest.clear_db()
-
-# for i in range(1,5):
-#     creature_species.generate_creature_species()
-
-# for i in range(1,5):
-#     flora_species.generate_flora_species()
-
-# for i in range(1,5):
-#     flora.generate_flora(flora.get_random_flora_type())
-
-# for i in range(1,5):
-#     creature.generate_creature(creature.get_random_creature_type())
-
-# # game 
+## run model 
 def main (running):
-    logthis.logger.debug("main")
+    logger2.logger.debug("main")
 
-    while game_conf.g.running == True:
+    while game_conf.w.running == True:
 
         # Game Loop
-        game_conf.g.increment_tick()
-        game_conf.g.game_display.fill(game_conf.g.get_bg_color()) 
+        game_conf.w.increment_tick()
+        game_conf.w.game_display.fill(game_conf.w.get_bg_color()) 
         scheduler.scheduler_run()
         pygame.display.update()
         mongotest.manage_hist()
-        #reporter.write_html()
+        game_conf.w.update_world()
         
 
         # Event Handler
@@ -64,20 +42,24 @@ def main (running):
             if event.type == KEYDOWN:
 
                 if event.key == K_ESCAPE:
-                    logthis.logger.debug("escape key")
+                    logger2.logger.debug("escape key")
                     running = False
                     return
                 
                 if event.key == K_p:
-                    logthis.logger.info("pause")
+                    logger2.logger.info("pause")
 
                 if event.key == K_i:
-                    logthis.logger.debug("i = get_game_info")
-                    to_file.get_game_info()
+                    logger2.logger.debug("i = get_game_info")
+
 
             # close window button
             elif event.type == QUIT:
                 running = False
 
-main(game_conf.g.running)
+
+
+
+
+main(game_conf.w.running)
 

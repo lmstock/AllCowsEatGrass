@@ -2,7 +2,7 @@ import random
 
 import mongotest
 import names
-import archive_tests.logthis as logthis
+import logger2
 import game_conf
 import game_imgs.cret_imgs as cret_imgs
 import core
@@ -15,7 +15,7 @@ import species_pools
 '''species is a template of a creature'''
 
 def generate_creature_species():
-    logthis.logger.info("generate_species")
+    logger2.logger.info("generate_species")
 
     species_type = names.generate_name()
     head = random.choice(species_pools.head_pool)
@@ -27,7 +27,7 @@ def generate_creature_species():
     
 
     def gen_sleep_habits():
-        logthis.logger.debug("gen_sleep_habits")
+        logger2.logger.debug("gen_sleep_habits")
         #sleep_roll    10d9 for % sleep vs awake in a day
         
         sleep_roll = core.roll(10,9)

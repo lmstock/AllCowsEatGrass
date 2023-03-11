@@ -1,7 +1,7 @@
 
 import random
+
 import logger2 
-import scheduler
 import mongotest
 
 
@@ -58,7 +58,7 @@ def check_current_rest(active_task, rest, task_q, sleep_dur):
     logger2.logger.debug("check_current_rest")
 
     if active_task == []:
-        print("active_task is empty")
+        logger2.logger.debug("active task is empty")
 
     elif active_task[0] == "sleep":
         var_list = [active_task, rest, task_q, sleep_dur]
@@ -102,7 +102,7 @@ def check_current_satiety(active_task, satiety, task_q):
     logger2.logger.debug("check_current_satiety")
 
     if active_task == []:
-        print("active_task is empty")
+        logger2.logger.debug("active task is empty")
     
 
     elif active_task[0] == "eat":
