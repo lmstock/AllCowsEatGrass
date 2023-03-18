@@ -23,22 +23,30 @@ def flora_action(f):
         f['growth_data'][2] = f['growth_data'][2] + 1
         return f
 
-    def growth_check(f):
-        logger2.logger.info("grow")
 
+    def growth_check(f):
+        logger2.logger.debug("grow")
 
         def check_cooldown(f):
-            logger2.logger.info("check_cooldown")
+            logger2.logger.debug("check_cooldown")
             if f['growth_data'][2] > f['growth_data'][3]:
+                logger2.logger.debug("passed cool down")
                 return True
-            else: return False
+            else: 
+                logger2.logger.debug("failed cool down")
+
+                # increment cool down
+                f['growth_data'][2] = f['growth_data'][2] + 1
+                return False
             
         def growth_roll(f):
-            logger2.logger.info("growth_roll")
-            roll_check = core.roll(1,100)
+            logger2.logger.debug("growth_roll")
+            roll_check =  core.roll(1,100)
+
             if roll_check > f['growth_data'][1]:
                 return True
-            else: return False
+            else:
+                return False
 
         def grow(f):
             logger2.logger.debug("grow")
@@ -59,19 +67,18 @@ def flora_action(f):
             else: # s
                 y = y - dist
 
-            msg = to_color.Colors.fg.blue + str(growth_roll) + " " + str(x) + " " + str(y) + to_color.Colors.reset
-            logger2.logger.info(msg) 
+            msg = to_color.Colors.fg.blue + str(dist) + " " + str(x) + " " + str(y) + to_color.Colors.reset
+            logger2.logger.debug(msg) 
 
             # reset counter
             f['growth_data'][2] = 0
 
             # count offspring
-            if len(f['growth_data']) == 4:
-                f.update({'growth_data'[4] : 1})
-                logger2.logger.info("offspring")
+            if 'offspring' not in f: 
+                f['offspring'] = 1
+
             else:
-                f['growth_data'][4] = f['growth_data'][4] + 1
-                logger2.logger.info("no offspring")
+                f['offspring'] = f['offspring'] + 1
 
             generate_flora(f['flora_species_type'], x, y)
 
@@ -114,18 +121,15 @@ def flora_action(f):
     update_viewport(f)
     mongotest.update_flora_byid(f['_id'], f)
         
-
+# always print flora gen to terminal
 def generate_flora(flora_type, x, y):
     logger2.logger.info("generate flora")
-
-    msg = flora_type, x, y
-    logger2.logger.info(msg)
 
     s = mongotest.read_flora_species("flora_species_type", flora_type)
 
     # iterate through with i
     for i in s:
-        print(i)
+        print(to_color.Colors.fg.green, i, to_color.Colors.reset)
 
     # add to db
     new_flora = {

@@ -100,7 +100,7 @@ def read_creature_species(a , b):
     return cursor
 
 def read_flora_species(a,b):
-    logger2.logger.info("read flora species")
+    logger2.logger.debug("read flora species")
     cursor = db.herbarium.find({a:b})
     return cursor
 
