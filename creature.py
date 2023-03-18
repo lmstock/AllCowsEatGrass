@@ -9,46 +9,32 @@ import chk_active_task
 import inc_active_task
 import game_conf
 
-
 import game_imgs.cret_imgs as cret_imgs
 
 
-
-
 def creature_action(s):
+    logger2.logger.debug("creature_action")
 
     s = inc_turn.increment_turn(s)
     s = triggers.trigger_tasks(s)
+
     s = chk_active_task.check_active_task(s)
     w = inc_active_task.increment_active_task(s)
 
-    hist_tracking(w, 20)
-    update_viewport(w)
-    mongotest.update_cret_byid(w['_id'], w)
+    if w == None:
+        return
+    
+    else:
+        hist_tracking(w, 20)
+        update_viewport(w)
+        mongotest.update_cret_byid(w['_id'], w)
 
-    # try batch update historical data for creature
-    def get_batch_update(w):
-        update_list = {
-            "objID": w['_id'],
-            "tick": game_conf.w.current_tick,
-            "species": w['species_type'],
-            "rest": w['rest'],
-            "satiety": w['satiety'],
-            "energy": w['energy'],
-            "hostility": w['hostility'],
-            'health': w['health'],
-            'active_task': w['active_task'],
-            'x': w['x'],
-            "y": w['y']
-        }
-        return update_list
 
-    batch_update = get_batch_update(w)
-    return batch_update
 
 # OTHER
 def update_viewport(w):
     logger2.logger.debug("update_viewport")
+    
     coords = (w['x'],w['y'])
     img_index = int(w['img'])
 

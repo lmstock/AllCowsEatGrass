@@ -4,6 +4,10 @@ import game_conf
 import scheduler
 import logger2
 import mongotest
+import creature
+import creature_species
+import flora
+import flora_species
 
 
 from pygame.locals import (
@@ -19,7 +23,20 @@ from pygame.locals import (
     QUIT, 
 )
 
+# for i in range(1,5):
+#     creature_species.generate_creature_species()
 
+# GENERATE FLORA SPECIES
+# for i in range(1,5):
+#     flora_species.generate_flora_species()
+
+#GENERATE FLORA POPULATION
+# for i in range(2):
+#     flora.generate_random_flora()
+
+# ## GENERATE CREATURE POPULATION ##
+# for i in range(1,15):
+#     creature.generate_creature(creature.get_random_creature_type())
 
 ## run model 
 def main (running):
@@ -56,9 +73,6 @@ def main (running):
             # close window button
             elif event.type == QUIT:
                 running = False
-
-
-
 
 
 main(game_conf.w.running)

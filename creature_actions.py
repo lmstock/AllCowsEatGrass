@@ -1,13 +1,7 @@
 import random
 
 import logger2
-
-
-
-
-        
-
-
+import mongotest
 
 
 
@@ -29,7 +23,6 @@ def sleep(x):
 
     return x
 
-
 def eat(x):
     logger2.logger.debug("eat")
 
@@ -48,7 +41,6 @@ def eat(x):
         x['active_task'] = []
     
     return x
-
 
 def wander(x):
     logger2.logger.debug("wander")
@@ -99,25 +91,50 @@ def nothing(x):
     return x
 
 def observe(x):
-    # observing fov and gathering knowledge
-    logger2.logger.debug("observe")
-    pass
-    
-    # #update task
-    # x['active_task'][2] = x['active_task'][2] + 1
+    logger2.logger.info("observe")
+    print(x['active_task'])
+    # observing serves to update the knowledge base, reaction code
 
-    # cret_type = scheduler.population[x]["type"]
-    # cret_action = scheduler.population[x]["active_task"]
-    
-    # # if x in kb update observation
-    # if n in x.knowledge_base.keys():
-    #     x.knowledge_base[cret_type][0][0] = x.knowledge_base[cret_type][0][0] +1
-    # else:
-    #     # add species to knowledge base
-    #     x.knowledge_base[cret_type] = [1,0,1]
+    #update task count
+    x['active_task'][2] = x['active_task'][2] + 1
 
-    # if cret_action == "attack":
-    #     x.knowledge_base[cret_type][0][2] = 3   # retreat
+    #creature we are interacting with is passed in through active_task
+    cret = x["active_task"][4]
+    cret_id = cret[0]
+    cret_species_type = cret[1]
+    cret_active_task = cret[2]
+
+    # add if not in kb
+    if cret_species_type not in x['knowledge_base']:
+        x['knowledge_base'][cret_species_type] = [0,0,1]
+
+    # if creature is currently attacking set reaction code to flee
+    def set_reaction_code():
+        logger2.logger.info("set_reaction_code")
+
+        # set reaction code
+        if cret_active_task == "attack":
+            reaction_code = 3
+
+        else: 
+            reaction_code = 1
+
+        return reaction_code
+    
+    r = set_reaction_code()
+    
+    # update observation count
+    x["knowledge_base"][cret_species_type][0] = x["knowledge_base"][cret_species_type][0] + 1
+
+    # set reaction code
+    if x["knowledge_base"][cret_species_type][2] == 3:
+        pass
+    else:
+        x["knowledge_base"][cret_species_type][2] = r
+    
+    # if observation count = 10? add key {"hostility" : cret_hostility} (pass in with other 3 data)
+    # for now observation data can grow
+
     return x
         
 def investigate(x):
@@ -167,6 +184,15 @@ def play(x):
 
     return x
 
+def die(x):
+    # health runs out
+    logger2.logger.info("die")
+    msg = " \033[31ma creature " + str(x['_id']) + " has passed from this mortal plane\033[0m"
+    logger2.logger.info(msg)
 
+    x['is_alive'] = False
+    mongotest.remove_individual_byid(x["_id"])
+    mongotest.add_to_mortuary(x)
+    
 
     

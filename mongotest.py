@@ -55,7 +55,7 @@ def list_flora():
     flora = db.herbarium.find()
     flora_list = []
     for i in flora:
-        flora_list.append(i['flora_type'])
+        flora_list.append(i['flora_species_type'])
     return flora_list
 
 def get_bestiary():
@@ -100,7 +100,7 @@ def read_creature_species(a , b):
     return cursor
 
 def read_flora_species(a,b):
-    logger2.logger.debug("read flor species")
+    logger2.logger.info("read flora species")
     cursor = db.herbarium.find({a:b})
     return cursor
 
@@ -114,13 +114,17 @@ def read_individual_byid(id):
     cursor = db.population.find({"_id" : ObjectId(id)})
     return cursor
 
+def remove_individual_byid(id):
+    logger2.logger.info("remove_individual_byid")
+    db.population.delete_one( { "_id" : id } )
+
 def read_flora_ind_byid(id):
     logger2.logger.debug("read_flora_ind_byid")
     cursor = db.flora_pop.find({"_id" : ObjectId(id)})
     return cursor
 
 
-# returns a list of species _ids
+# returns a list of tuples (creature id, species type, active_task)
 def get_locals(x,y,fov):
     logger2.logger.debug("get_locals")
 
@@ -133,9 +137,9 @@ def get_locals(x,y,fov):
 
     local_crets = []
     for i in x:
-        local_crets.append(i['species_type'])
+        local_crets.append((i['_id'], i['species_type'], i['active_task']))
 
-    # list of _ids
+    # list of tuples (cret id, species type, active_task)
     return local_crets
 
 
@@ -152,6 +156,17 @@ def update_cret_byid(id, update):
 
     db.population.update_one(id, new_vals)
 
+def update_flora_byid(id, update):
+    logger2.logger.debug("update_flora_byid")
+
+    id = {"_id" : ObjectId(id)}
+    #logger2.logger.debug(str(id))
+    
+    new_vals = { "$set" : update }
+    #logger2.logger.debug(str(new_vals))
+
+    db.flora_pop.update_one(id, new_vals)
+
 
 # ===== TESTING =====
 def add_historical_data(batch_data):
@@ -161,11 +176,9 @@ def add_historical_data(batch_data):
     db.history.insert_many(batch_data)
 
 def get_world_data(world_name):
-    logger2.logger.info("get_world_data")
+    logger2.logger.debug("get_world_data")
     cursor = db.world.find({ "world_name" : world_name })
     return cursor
-
-get_world_data("alkows")
 
 def update_world(world_name, update):
     logger2.logger.debug("update_world_data")
@@ -173,3 +186,7 @@ def update_world(world_name, update):
     name = {"world_name" : world_name }
     new_vals = { "$set" : update }
     db.world.update_one(name, new_vals)
+
+def add_to_mortuary(unit):
+    logger2.logger.info("add_to_mortuary")
+    db.mortuary.insert_one(unit)

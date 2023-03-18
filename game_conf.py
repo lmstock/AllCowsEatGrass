@@ -16,7 +16,7 @@ class World:
     bg_color: tuple = (255,255,255)
 
     clock=pygame.time.Clock()
-    clock.tick(.5)
+    clock.tick(.05)
     game_display = pygame.display.set_mode((1200, 600))
 
 
@@ -53,7 +53,7 @@ class World:
 
     def increment_tick(self):
         tick = int(self.current_tick) + 1
-        msg = "Current Tick: " + str(tick)
+        msg = "Current Tick: " + str(tick) 
         logger2.logger.info(msg)
         self.clock.tick(.5)
         self.current_tick = tick

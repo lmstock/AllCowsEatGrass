@@ -3,6 +3,7 @@ import random
 import mongotest
 import names
 import logger2
+import core
 
 import game_imgs.flor_imgs
 
@@ -63,8 +64,11 @@ def generate_flora_species():
     # will be generated
     energy = 100
 
-    # will be generated
-    growth_data = [1,1,1]
+    # will be generated (spread distance 0-10, chance for spread 10 - 100%, counter, cooldown)
+    spread_distance = core.roll(1,10)
+    spread_chance = core.roll(1,100)
+    cooldown = core.roll(100,100)
+    growth_data = (spread_distance, spread_chance, 0, cooldown)
     
     # herbarium is collection in mongo
     new_flora_species = {

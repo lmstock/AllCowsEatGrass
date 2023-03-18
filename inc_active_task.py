@@ -7,7 +7,6 @@ def increment_active_task(s):
 
     active_task = s['active_task']
 
-
     #if active_task is empty, pass
     if active_task == []:
         return s
@@ -32,6 +31,9 @@ def increment_active_task(s):
 
         elif active_task[0] == "observe":
             result = ca.observe(s)
+
+        elif active_task[0] == "die":
+            result = ca.die(s)
 
         return result
 

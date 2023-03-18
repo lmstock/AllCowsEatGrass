@@ -13,7 +13,7 @@ import logger2
 def roll(d,s):
     logger2.logger.debug("roll")
     total = 0
-    for i in range(1,d):    
+    for i in range(d):    
         n = random.randint(1,s)
         total = total + n
     return total

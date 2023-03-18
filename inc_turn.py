@@ -3,32 +3,28 @@ import logger2
 
 
 # UPDATE ATTRIBUTES THAT CHANGE EACH TURN
-def increment_turn(s):
+def increment_turn(x):
     logger2.logger.debug("increment_turn")
 
-    active_task = s['active_task']
-    rest = s['rest']
-    satiety = s['satiety']
-    age = s['age']
-    base_fatigue = s['base_fatigue']
+    # identify creature in logger
+    # msg = "\033[32m" + "i am: " + str(x['_id']) + " " + str(x['species_type']) + "\033[0m"
+    # logger2.logger.info(msg)
 
-
-    if active_task == []:
-        rest[0] = round(rest[0] + base_fatigue, 2)
-        satiety[0] = round(satiety[0] + satiety[1], 2)
-    
-    elif active_task[0] != "sleep":
-        rest[0] = round(rest[0] + base_fatigue, 2)
-
-    elif active_task[0] != "eat":
-        satiety[0] = round(satiety[0] + satiety[1], 2)
+    if x['active_task'] == []:
+        x['rest'][0] = round(x['rest'][0] + x['base_fatigue'], 2)
+        x['satiety'][0] = round(x['satiety'][0] + x['satiety'][1], 2)
         
-    age = round(age + .0000025, 7)
 
-    s['active_task'] = active_task
-    s['rest'] = rest
-    s['satiety'] = satiety
-    s['age'] = age
-    s['base_fatigue'] = base_fatigue
+    elif x['active_task'][0] != "sleep":
+        x['rest'][0] = round(x['rest'][0] + x['base_fatigue'], 2)
+        
 
-    return s
+    elif x['active_task'][0] != "eat":
+        x['satiety'][0] = round(x['satiety'][0] + x['satiety'][1], 2)
+        
+    if x['rest'][0] < 0: x['rest'][0] = 0
+    if x['satiety'][0] < 0: x['satiety'][0] = 0
+    x['age'] = round(x['age'] + .0000025, 7)
+
+
+    return x

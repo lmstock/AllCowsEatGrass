@@ -19,13 +19,7 @@ def scheduler_run():
         for j in x:
 
             # returns dict of historical data for each cret
-            hist_data = creature.creature_action(j)
-
-            # add hist_data to list
-            hist_data_update.append(hist_data)
-
-
-        
+            creature.creature_action(j)
 
 
     # pull list of population -id from db
@@ -35,8 +29,9 @@ def scheduler_run():
 
         ind = mongotest.read_flora_ind_byid(k)   # ind = cursor object
         for l in ind:
+
+            # returns dict of historical data for each cret
             flora.flora_action(l)
 
 
-    # add hist data to collection
-    mongotest.add_historical_data(hist_data_update)
+

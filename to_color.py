@@ -44,5 +44,5 @@ class Colors:
         cyan = '\033[46m'
         lightgrey = '\033[47m'
 
-print("SKk", Colors.fg.red, "Amartya")
-print(Colors.fg.yellow, "txt  ")
+# print("SKk", Colors.fg.red, "Amartya")
+# print(Colors.fg.yellow, "txt  ")
