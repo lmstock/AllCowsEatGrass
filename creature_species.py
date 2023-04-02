@@ -4,7 +4,6 @@ import mongotest
 import names
 import logger2
 import game_conf
-import game_imgs.cret_imgs as cret_imgs
 import core
 import species_pools
 
@@ -23,7 +22,7 @@ def generate_creature_species():
     body_type = random.choice(species_pools.body_type_pool)
 
     # select image
-    species_img = cret_imgs.choose_cret_img(size)
+    species_img = "cret_imgs.choose_cret_img(size)"
     
 
     def gen_sleep_habits():
@@ -31,8 +30,7 @@ def generate_creature_species():
         #sleep_roll    10d9 for % sleep vs awake in a day
         
         sleep_roll = core.roll(10,9)
-
-        sleep_duration = round((sleep_roll/100) * game_conf.g.ticks_per_day, 2)
+        sleep_duration = round((sleep_roll/100) * int(game_conf.w.ticks_per_day), 2)
         awake_duration = round(1000 - sleep_duration, 2)
 
         fully_rested = core.roll(5,15) * 10   # 5d20 * 10 for full energy (5, 500)
@@ -43,10 +41,10 @@ def generate_creature_species():
 
     s = gen_sleep_habits()
 
-    rest = [s[1], s[1]]
+    rest = [s[1], s[3], s[1]]  # (current rest, base fatique, max rest)
     sleep_duration = s[0]
     rest_gain = s[2]
-    base_fatigue = s[3]
+
 
     satiety = [100, -1, 100]  # (current satiety, loss per turn, max satiety)
     hostility = [100, 100]
@@ -71,7 +69,6 @@ def generate_creature_species():
         "rest": rest,
         "sleep_duration": sleep_duration,
         "rest_gain": rest_gain,
-        "base_fatigue": base_fatigue,
 
         "satiety": satiety,
         "hostility": hostility,

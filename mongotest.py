@@ -5,8 +5,6 @@ import game_conf
 
 
 c = MongoClient()
-
-#db = c['testkows']
 db = c['alkows']
 
 def add_creature_species(sp):
@@ -32,15 +30,6 @@ def clear_db():
     db.herbarium.drop()
     db.flora_pop.drop()
     db.history.drop()
-
-def manage_hist():
-    logger2.logger.debug("manage_hist")
-    now_tick = game_conf.w.current_tick - 100
-
-    try:
-        db.history.delete_many( { "tick" : { "$lt" : now_tick }})
-    except Exception as e:
-        logger2.logger.debug(e)
 
 def list_beasts():
     logger2.logger.debug("list_beasts")
@@ -75,6 +64,29 @@ def get_herbarium():
         herbarium.update({i['flora_species_type']:i})
     logger2.logger.debug(herbarium)
     return herbarium
+
+def get_cret_census():
+    logger2.logger.debug("get_census")
+    cret_collection = db.population.find()
+    cret_dict = {}
+    for i in cret_collection:
+        cret_dict.update({i['_id']:i})
+    return cret_dict
+
+def get_flora_census():
+    logger2.logger.debug("get_flora_census")
+    flora_collection = db.flora_pop.find()
+    flora_dict = {}
+    for i in flora_collection:
+        flora_dict.update({i['_id']:i})
+    return flora_dict
+
+def get_collection(collection_name):
+    cursor = db.collection_name.find()
+    census_dict = {}
+    for i in cursor:
+        census_dict.update({i['_id']:i})
+    return census_dict
 
 def get_population():
     logger2.logger.debug("get_population")
@@ -167,14 +179,19 @@ def update_flora_byid(id, update):
 
     db.flora_pop.update_one(id, new_vals)
 
+def add_to_mortuary(unit):
+    logger2.logger.info("add_to_mortuary")
+    try:
+        db.mortuary.insert_one(unit)
+    except Exception as e:
+        msg = "send to log file: ", e
 
-# ===== TESTING =====
-def add_historical_data(batch_data):
-    logger2.logger.debug("add_historical_data")
-    
-    # batch data is a list of dict items for mongo
-    db.history.insert_many(batch_data)
+def check_for_dup(species,x,y):
+    logger2.logger.debug("check_for_dup")
+    cursor = db.flora_pop.find({ "flora_species_type" : species })
+    return cursor
 
+# ===== WORLD =====
 def get_world_data(world_name):
     logger2.logger.debug("get_world_data")
     cursor = db.world.find({ "world_name" : world_name })
@@ -187,6 +204,32 @@ def update_world(world_name, update):
     new_vals = { "$set" : update }
     db.world.update_one(name, new_vals)
 
-def add_to_mortuary(unit):
-    logger2.logger.info("add_to_mortuary")
-    db.mortuary.insert_one(unit)
+
+
+# === HISTORICAL === #
+def get_hist_data(id):
+    logger2.logger.info("get_hist_data")
+    cursor = db.history.find_one({"_id" : id })
+    return cursor
+
+def add_history(h):
+    logger2.logger.info("add_history_byid")
+    db.history.insert_one(h)
+
+def update_history_byid(id, update):
+    logger2.logger.debug("update_cret_byid")
+
+    id = {"_id" : ObjectId(id)}
+    #logger2.logger.info(str(id))
+    
+    new_vals = { "$set" : update }
+    #logger2.logger.info(str(new_vals))
+
+    db.history.update_one(id, new_vals)
+
+
+# === REPRODUCTIVE === #
+def read_creature_parent(id):
+    logger2.logger.info("read_creature_parent")
+    parent_dict = db.population.find_one({"_id" : id})
+    return parent_dict

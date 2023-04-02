@@ -1,41 +1,41 @@
 
 import creature_actions as ca
 import logger2
+import core
 
 def increment_active_task(s):
     logger2.logger.debug("increment_active_task")
 
-    active_task = s['active_task']
+    print(s['active_task'])
 
     #if active_task is empty, pass
-    if active_task == []:
+    if s['active_task'] == []:
+
+        s['active_task'] = ["wander", 3, 1, 1]
         return s
 
 
     else:
 
-        if active_task[0] == "sleep":
+        if s['active_task'][0] == "sleep":
             result = ca.sleep(s)
 
-        elif active_task[0] == "wander":
+        elif s['active_task'][0] == "wander":
             result = ca.wander(s)
 
-        elif active_task[0] == "nothing":
-            result = ca.nothing(s)
-
-        elif active_task[0] == "eat":
+        elif s['active_task'][0] == "eat":
             result = ca.eat(s)
         
-        elif active_task[0] == "play":
+        elif s['active_task'][0] == "play":
             result = ca.play(s)
 
-        elif active_task[0] == "observe":
-            result = ca.observe(s)
-
-        elif active_task[0] == "die":
+        elif s['active_task'][0] == "die":
             result = ca.die(s)
 
-        return result
+        s = core.check_active_task(result)
+        s = core.promote_task_q(s)
+        return s
 
+    
 
 

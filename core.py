@@ -1,11 +1,5 @@
 import random
-
-import game_conf
 import logger2
-
-
-
-
 
 
 
@@ -18,42 +12,74 @@ def roll(d,s):
         total = total + n
     return total
 
-def random_coords():
-    logger2.logger.debug("random_coords")
-    x = roll(2, game_conf.g.display_width / 2)
-    y = roll(2, game_conf.g.display_height / 2)
-    coord = (x,y)
-    return coord
+
+def incr_active_task(x):
+    x['active_task'][2] = x['active_task'][2] + 1
+    return x
+
+def fence(x):
+    if x['x'] > 999:
+        x['x'] = 999
+
+    if x['x'] < -999:
+        x['x'] = -999
+
+    if x['y'] > 999:
+        x['y'] = 999
+
+    if x['y'] < -999:
+        x['y'] = -999
 
 
+    return x
 
-    
+def check_active_task(x):
+    logger2.logger.debug("check_active_task")
 
-##you are going to want this...
-# marked for removal 2/11/23
-def coords_world_to_display(x,y):
-    logger2.logger.debug("coords_world_to_display")
-    x = x * 30
-    y = y * 30
-    return x,y
+    # creature died, there is probably a cleaner way to do this.
+    if x == None:
+        pass
+
+    # pass if empty
+    if x['active_task'] == []:
+        return x
+
+    # check active task for completion
+    elif x['active_task'][2] >= x['active_task'][3]:
+        x['active_task'] = []
+        return x
+    else: return x
 
 
-# return a list of tiles surrounding a coord
-def get_surrounding_tiles(x, y, distance_away):
-    logger2.logger.debug("get_surrounding_tiles")
-    distance = distance_away
-    surrounding_tiles = []
+def promote_task_q(x):
+    logger2.logger.debug("promote_task_q")
 
-    lower_x = x - distance
-    upper_x = x + distance + 1
+    # creature died, there is probably a cleaner way to do this.
+    if x == None:
+        pass
 
-    lower_y = y - distance
-    upper_y = y + distance + 1
+    if x['active_task'] == []:
 
-    for i in range(lower_x, upper_x):
-        for j in range(lower_y, upper_y):
-            tup = (i,j)
-            surrounding_tiles.append(tup)
+        p1,p2,p3 = [],[],[]
 
-    return surrounding_tiles
+        for i in x['task_q']:
+            if i[1] == 1: p1.append(i)
+            elif i[1] == 2: p2.append(i)
+            else: p3.append(i)
+
+
+        if p1 != []: t = random.choice(p1)
+        elif p2 != []: t = random.choice(p2)
+        elif p3 != []: t = random.choice(p3)
+        else: 
+            t = ["wander", 3, 0, 3]
+
+        x['active_task'] = t
+
+        try:
+            x['task_q'].remove(t)
+        except Exception as e:
+            pass
+
+    return x
 

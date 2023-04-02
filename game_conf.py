@@ -1,6 +1,7 @@
+from time import sleep 
 from dataclasses import dataclass
 import logger2  
-import pygame
+
 import mongotest
 
 
@@ -8,54 +9,24 @@ import mongotest
 class World:
     world_name: str
     world_health: int
-    display_width: int
-    display_height: int
+
     current_tick: int
     ticks_per_day: int
 
-    bg_color: tuple = (255,255,255)
-
-    clock=pygame.time.Clock()
-    clock.tick(.05)
-    game_display = pygame.display.set_mode((1200, 600))
-
-
-    def get_bg_color(self):
-
-        def get_hund(m):
-            n = str(m)
-
-            if len(n) <= 2:
-                h = 0
-            else:
-                h = n[-3]
-            return h
-        
-        n = int(get_hund(self.current_tick))
-
-        def wtf(n):
-
-            if n == 0:  return (25,60,90)
-            elif n == 1 or n == 9: return (70,94,104)
-            elif n == 2 or n == 8: return (115,128,118)
-            elif n == 3 or n == 7: return (160,162,132)
-            elif n == 4 or n == 6: return (205,196,146)
-            elif n == 5: return (250,230,160)
-                
-        return wtf(n)
         
     def start_game(self):
         self.running = True
+
+    def stop_game(self):
+        self.running = False
         
-        
-        pygame.display.set_caption(world_name)
-        pygame.init()
+
 
     def increment_tick(self):
         tick = int(self.current_tick) + 1
         msg = "Current Tick: " + str(tick) 
-        logger2.logger.info(msg)
-        self.clock.tick(.5)
+        #logger2.logger.info(msg)
+        sleep(1)
         self.current_tick = tick
 
     def update_world(self):
@@ -82,8 +53,7 @@ def build_world(world_name):
     world = World(
         world_name,
         world_health,
-        display_width,
-        display_height,
+
         current_tick,
         ticks_per_day
     )

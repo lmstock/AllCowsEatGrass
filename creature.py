@@ -1,75 +1,44 @@
-import pygame
-import random
 
+import random
+import historical
 import mongotest
 import logger2
 import inc_turn
 import triggers
-import chk_active_task
-import inc_active_task
-import game_conf
 
-import game_imgs.cret_imgs as cret_imgs
+import inc_active_task
+
 
 
 def creature_action(s):
     logger2.logger.debug("creature_action")
+    # this works
 
-    s = inc_turn.increment_turn(s)
-    s = triggers.trigger_tasks(s)
+    t = inc_turn.increment_turn(s)
 
-    s = chk_active_task.check_active_task(s)
-    w = inc_active_task.increment_active_task(s)
+    # this works
+    u = triggers.trigger_tasks(t)
+
+    # this works
+    w = inc_active_task.increment_active_task(u)
+
 
     if w == None:
         return
     
     else:
-        hist_tracking(w, 20)
-        update_viewport(w)
+        historical.history_tracking(w) # save data in increments of x in order to capture longer term data
         mongotest.update_cret_byid(w['_id'], w)
 
 
+# creates a creature from parent through "creature division"
+def divide_creature(parent_id):
+    logger2.logger.info("divide_creature")
 
-# OTHER
-def update_viewport(w):
-    logger2.logger.debug("update_viewport")
+    parent_dict = mongotest.read_creature_parent(parent_id)
     
-    coords = (w['x'],w['y'])
-    img_index = int(w['img'])
-
-    x = cret_imgs.crets_list[img_index]
-    
-    game_conf.w.game_display.blit(x, coords)
-    pygame.display.update()
-
-    # hist_tracking(x, 'rest_track', x['rest'][0], 20)
 
 
-def hist_tracking(x, hist_duration):
-    logger2.logger.debug("hist_tracking")
-
-    x['rest_hist'].append(x['rest'][0])
-    if len(x['rest_hist']) > hist_duration:
-        x['rest_hist'].pop(0)
-
-    x['satiety_hist'].append(x['satiety'][0])
-    if len(x['satiety_hist']) > hist_duration:
-        x['satiety_hist'].pop(0)
-
-    x['energy_hist'].append(x['energy'][0])
-    if len(x['energy_hist']) > hist_duration:
-        x['energy_hist'].pop(0)
-    
-    x['hostility_hist'].append(x['hostility'][0])
-    if len(x['hostility_hist']) > hist_duration:
-        x['hostility_hist'].pop(0)
-
-    x['health_hist'].append(x['health'][0])
-    if len(x['health_hist']) > hist_duration:
-        x['health_hist'].pop(0)
-
-    return x
 
 # creates a creature from a species in db.bestiary
 def generate_creature(creature_type):
@@ -80,7 +49,7 @@ def generate_creature(creature_type):
     
     # iterate through it with i
     for i in s:
-        print(i)
+        logger2.logger.info(i)
 
     # add to db
     new_creature = {
@@ -90,7 +59,6 @@ def generate_creature(creature_type):
 
     "sleep_dur": i["sleep_duration"],
     "rest_gain": i["rest_gain"],
-    "base_fatigue": i["base_fatigue"],
     "rest": i["rest"],  # fully rested
     
     "satiety": i["satiety"],
@@ -112,13 +80,7 @@ def generate_creature(creature_type):
     # type: [observation count, investigation count, reaction code]  ## .5 knowledge indicates own species
     "knowledge_base": {creature_type: [.5, .5, 1]},
     
-    "interrupt": [],
     "is_alive": True,
-    "rest_hist": [],
-    "satiety_hist": [],
-    "energy_hist": [],
-    "hostility_hist": [],
-    "health_hist": []
     }
     
 

@@ -1,13 +1,10 @@
 import random
-import pygame
 
 import logger2
 import mongotest
 import game_conf
 import core
 import to_color
-
-import game_imgs.flor_imgs as flor_imgs
 
 
 
@@ -51,6 +48,23 @@ def flora_action(f):
         def grow(f):
             logger2.logger.debug("grow")
 
+            # check for duplicate species at that location
+            def check_for_duplicate(species,x,y):
+                msg = str(x) + " " + str(y) + " check for duplicate"
+                logger2.logger.info(msg)
+
+                # db function
+                cursor = mongotest.check_for_dup(species, x, y)
+                for i in cursor:
+                    if i['x'] == x and i['y'] == y:
+                        msg = to_color.Colors.fg.blue + "duplicate true" + to_color.Colors.reset
+                        logger2.logger.info(msg)
+                        return True
+                    else:
+                        
+                        logger2.logger.info("duplicate false")
+                        return False
+
             x = f['x']
             y = f['y']
             dist = f['growth_data'][0]
@@ -80,7 +94,11 @@ def flora_action(f):
             else:
                 f['offspring'] = f['offspring'] + 1
 
-            generate_flora(f['flora_species_type'], x, y)
+            if check_for_duplicate(f['flora_species_type'],x,y) == True:
+                pass
+            else:
+                generate_flora(f['flora_species_type'], x, y)
+
 
             return f
 
@@ -106,19 +124,12 @@ def flora_action(f):
 
 
 
-    def update_viewport(f):
-        logger2.logger.debug("update_viewport")
-        coords = (f['x'],f['y'])
-        img_index = int(f['img'])
 
-        x = flor_imgs.flors_list[img_index]
-        game_conf.w.game_display.blit(x, coords)
-        pygame.display.update()
 
     f = increment_turn(f)
     f = growth_check(f)
 
-    update_viewport(f)
+
     mongotest.update_flora_byid(f['_id'], f)
         
 # always print flora gen to terminal
@@ -144,7 +155,7 @@ def generate_flora(flora_type, x, y):
         "img": i['img']
     }
 
-
+    logger2.logger.debug(str(new_flora))
     mongotest.add_flora(new_flora)
 
 

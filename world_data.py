@@ -72,27 +72,61 @@
 
 #=== TESTING NESTED FUNCTIONS RETURN ===#
 
-f = "frog"
+# f = "frog"
 
-def top(f):
-    print("top function")
-    print(f)
+# def top(f):
+#     print("top function")
+#     print(f)
 
-    def middle(f):
-        print("middle function")
-        f = "frogs"
-        print(f)
-        return f
+#     def middle(f):
+#         print("middle function")
+#         f = "frogs"
+#         print(f)
+#         return f
     
-    f = middle(f)
-    if f == "frogs":
-        return f
+#     f = middle(f)
+#     if f == "frogs":
+#         return f
 
-    def inner(f):
-        print("inner function")
-        print(f)
+#     def inner(f):
+#         print("inner function")
+#         print(f)
 
-    inner(f)
+#     inner(f)
 
-top(f)
-print(f)
+# top(f)
+# print(f)
+
+# === TESTING CURSOR === #
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import logger2
+c = MongoClient()
+
+#db = c['testkows']
+db = c['alkows']
+
+def check_for_dup(species,x,y):
+    logger2.logger.info("check_for_dup")
+    cursor = db.flora_pop.find({ "flora_species_type" : species })
+    return cursor
+
+# check for duplicate species at that location
+def check_for_duplicate(species,x,y):
+    msg = str(x), " ", str(y), " check for duplicate"
+    logger2.logger.info(msg)
+
+    # db function
+    cursor = check_for_dup(species, x, y)
+    for i in cursor:
+        if i['x'] == x and i['y'] == y:
+            logger2.logger.info("duplicate true")
+            return True
+        else:
+            logger2.logger.info("duplicate false")
+            return False
+
+x =check_for_duplicate("buet", 457, 2700)
+print(x)
+
+## check this for false and true!

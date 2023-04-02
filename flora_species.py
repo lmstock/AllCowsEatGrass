@@ -5,7 +5,7 @@ import names
 import logger2
 import core
 
-import game_imgs.flor_imgs
+
 
 
 
@@ -59,7 +59,7 @@ def generate_flora_species():
     flora_type = random.choice(type_pool)
     
     # select image
-    flora_img = game_imgs.flor_imgs.choose_flor_img(size)
+    flora_img = "game_imgs.flor_imgs.choose_flor_img(size)"
 
     # will be generated
     energy = 100
