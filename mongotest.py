@@ -2,11 +2,13 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import logger2
 import game_conf
+import random
 
 
 c = MongoClient()
 db = c['alkows']
 
+# === ADDING === #
 def add_creature_species(sp):
     logger2.logger.debug("add_creature_species")
     db.bestiary.insert_one(sp)
@@ -23,6 +25,11 @@ def add_flora(flora):
     logger2.logger.debug("add_flora")
     db.flora_pop.insert_one(flora)
 
+# === REMOVING === #
+def remove_individual_byid(id):
+    logger2.logger.debug("remove_individual_byid")
+    db.population.delete_one( { "_id" : id } )
+
 def clear_db():
     logger2.logger.debug("clear_db")
     db.bestiary.drop()
@@ -30,6 +37,84 @@ def clear_db():
     db.herbarium.drop()
     db.flora_pop.drop()
     db.history.drop()
+
+def full_extinction_event(collection):
+    msg = collection, "full extinction event has been implemented"
+    logger2.logger.info(msg)
+    if collection == "bestiary":
+        db.bestiary.drop()
+    elif collection == "population":
+        db.population.drop()
+    elif collection == "herbarium":
+        db.herbarium.drop()
+    elif collection == "flora_pop":
+        db.flora_pop.drop()
+
+# percent is very approximate, random choice from list may choose the same unit twice.
+# actual percentage may be lower
+def mass_extinction_event(collection, percent):
+    msg = collection, "mass extinction event has been implemented"
+    logger2.logger.info(msg)
+
+    if collection == "bestiary":
+        all = db.bestiary.find()
+
+        all_lst = []
+        for i in all:
+            all_lst.append(i['species_type'])
+
+        lenlist = len(all_lst)
+        ct_for_removal = round(lenlist * percent/100)
+        print(ct_for_removal)
+        for j in range(1, ct_for_removal+1):
+            x = random.choice(all_lst)
+            db.bestiary.delete_one( { "species_type": x})
+
+    if collection == "population":
+        all = db.population.find()
+
+        all_lst = []
+        for i in all:
+            all_lst.append(i['_id'])
+
+        lenlist = len(all_lst)
+        ct_for_removal = round(lenlist * percent/100)
+        print(ct_for_removal)
+        for j in range(1, ct_for_removal+1):
+            x = random.choice(all_lst)
+            db.population.delete_one( { "_id" : x } )
+
+    if collection == "herbarium":
+        all = db.herbarium.find()
+
+        all_lst = []
+        for i in all:
+            all_lst.append(i['flora_species_type'])
+
+        lenlist = len(all_lst)
+        ct_for_removal = round(lenlist * percent/100)
+        print(ct_for_removal)
+        for j in range(1, ct_for_removal+1):
+            x = random.choice(all_lst)
+            db.herbarium.delete_one( { 'flora_species_type' : x } )
+
+    if collection == "flora_pop":
+        all = db.flora_pop.find()
+
+        all_lst = []
+        for i in all:
+            all_lst.append(i['_id'])
+
+        lenlist = len(all_lst)
+        ct_for_removal = round(lenlist * percent/100)
+        print("should be 75%", ct_for_removal)
+        for j in range(1, ct_for_removal+1):
+            x = random.choice(all_lst)
+            db.flora_pop.delete_one( { "_id" : x } )
+
+
+
+# === READING === #
 
 def list_beasts():
     logger2.logger.debug("list_beasts")
@@ -111,9 +196,19 @@ def read_creature_species(a , b):
     cursor = db.bestiary.find({ a : b })
     return cursor
 
+def read_creature_species_du(a , b):
+    logger2.logger.debug("read_species")
+    cursor = db.bestiary.find_one({ a : b })
+    return cursor
+
 def read_flora_species(a,b):
     logger2.logger.debug("read flora species")
     cursor = db.herbarium.find({a:b})
+    return cursor
+
+def read_flora_species_du(a,b):
+    logger2.logger.info("read flora species")
+    cursor = db.herbarium.find_one({a:b})
     return cursor
 
 def read_population(a,b):
@@ -126,9 +221,7 @@ def read_individual_byid(id):
     cursor = db.population.find({"_id" : ObjectId(id)})
     return cursor
 
-def remove_individual_byid(id):
-    logger2.logger.info("remove_individual_byid")
-    db.population.delete_one( { "_id" : id } )
+
 
 def read_flora_ind_byid(id):
     logger2.logger.debug("read_flora_ind_byid")
@@ -179,8 +272,13 @@ def update_flora_byid(id, update):
 
     db.flora_pop.update_one(id, new_vals)
 
+def update_species_by_name(name, update):
+    logger2.logger.info("update_species_by_name")
+    by_name = {"species_type": name}
+    db.bestiary.update_one(by_name, update)
+
 def add_to_mortuary(unit):
-    logger2.logger.info("add_to_mortuary")
+    logger2.logger.debug("add_to_mortuary")
     try:
         db.mortuary.insert_one(unit)
     except Exception as e:
@@ -208,12 +306,12 @@ def update_world(world_name, update):
 
 # === HISTORICAL === #
 def get_hist_data(id):
-    logger2.logger.info("get_hist_data")
+    logger2.logger.debug("get_hist_data")
     cursor = db.history.find_one({"_id" : id })
     return cursor
 
 def add_history(h):
-    logger2.logger.info("add_history_byid")
+    logger2.logger.debug("add_history_byid")
     db.history.insert_one(h)
 
 def update_history_byid(id, update):
@@ -230,6 +328,6 @@ def update_history_byid(id, update):
 
 # === REPRODUCTIVE === #
 def read_creature_parent(id):
-    logger2.logger.info("read_creature_parent")
+    logger2.logger.debug("read_creature_parent")
     parent_dict = db.population.find_one({"_id" : id})
     return parent_dict

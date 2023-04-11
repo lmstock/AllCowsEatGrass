@@ -1,27 +1,29 @@
 
 import game_conf
 import mongotest
+import shutil
+import logger2
 
 
 # write html file with game data
 # titles
-compendium_title = "Alkows Compendium 2"
-pop_title = "Alkows Populuation Data 1"
+compendium_title = "Alkows Census Data"
+pop_title = "Alkows Census Data"
 
 # css
 style_sheet = "style.css"
 
 # file paths
-compendium3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium3.html"
+census3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\censusdata3.html"
+cp_census3 = "G:\\censusdata3.html"
 
 # db functions
-pop = mongotest.get_population()
-bestiary = mongotest.get_bestiary()
-herbarium = mongotest.get_herbarium()
+pop = mongotest.get_cret_census()
+flora_pop = mongotest.get_flora_census()
 
 # headers
-bestiary_headers = ["_id", "species_type", "head", "size", "body_type"]
-herbarium_headers = ["_id", "flora_species_type", "size", "energy", "growth_data"]
+cret_pop_headers = ["_id", "species_type", "size", "age", "health", "x", "y", "active_task", "repr_cooldown", "offspring"]
+flora_pop_headers = ["_id", "flora_species_type", "size", "age", "energy", "growth_data", "x", "y", "offspring"]
 
 
 # setup page
@@ -47,18 +49,17 @@ def body_html(file_path, title):
         dash.write(
             "\t<body>\n"
             "\t\t<h1>" + title + "</h1>\n"  
-            "\t\t<p> current_tick:  " + str(game_conf.g.current_tick) + "</p>\n"
+            "\t\t<p> current_tick:  " + str(game_conf.w.current_tick) + "</p>\n"
         )
 
-def table(file_path, pop):
+# def table(file_path, pop):
+#     for i in pop:
+#         print("this is i: ", i)
+#         with open (file_path, "a") as dash:
 
-
-    for i in pop:
-        with open (file_path, "a") as dash:
-
-            dash.write(
-                "<p>" + str(i) + "</p>"
-            )
+#             dash.write(
+#                 "<p>" + str(i) + "</p>"
+#             )
 
 
 def append_html_tables(file_path, this_dict, header_list, table_name):
@@ -91,7 +92,6 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
                 for i in listz:
                     map[i] = ct
                     ct = ct + 1
-                print("map: ", map)
                 return map
 
             header_map = map_header_order(header_list)
@@ -126,10 +126,21 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
                 "<br>\n"
                 )
 
-write_html_head(compendium3,compendium_title,style_sheet)
-body_html(compendium3,compendium_title)
+# write_html_head(census3,compendium_title,style_sheet)
+# body_html(census3,compendium_title)
 
-append_html_tables(compendium3, bestiary, bestiary_headers, "bestiary")
-append_html_tables(compendium3, herbarium, herbarium_headers, "herbarium")
+# append_html_tables(census3, pop, cret_pop_headers, "creature census")
+# append_html_tables(census3, flora_pop, flora_pop_headers, "flora census")
 
-table(compendium3, pop)
+# shutil.copyfile(census3, cp_census3)
+
+def census_report():
+    logger2.logger.debug("census_report")
+    
+    write_html_head(census3,compendium_title,style_sheet)
+    body_html(census3,compendium_title)
+
+    append_html_tables(census3, pop, cret_pop_headers, "creature census")
+    append_html_tables(census3, flora_pop, flora_pop_headers, "flora census")
+
+    shutil.copyfile(census3, cp_census3)

@@ -12,31 +12,18 @@ import inc_active_task
 
 def creature_action(s):
     logger2.logger.debug("creature_action")
-    # this works
 
-    t = inc_turn.increment_turn(s)
-
-    # this works
-    u = triggers.trigger_tasks(t)
-
-    # this works
-    w = inc_active_task.increment_active_task(u)
+    s = inc_turn.increment_turn(s)
+    s = triggers.trigger_tasks(s)
+    s = inc_active_task.increment_active_task(s)
 
 
-    if w == None:
+    if s == None:
         return
     
     else:
-        historical.history_tracking(w) # save data in increments of x in order to capture longer term data
-        mongotest.update_cret_byid(w['_id'], w)
-
-
-# creates a creature from parent through "creature division"
-def divide_creature(parent_id):
-    logger2.logger.info("divide_creature")
-
-    parent_dict = mongotest.read_creature_parent(parent_id)
-    
+        historical.history_tracking(s) # save data in increments of x in order to capture longer term data
+        mongotest.update_cret_byid(s['_id'], s)
 
 
 
@@ -49,12 +36,11 @@ def generate_creature(creature_type):
     
     # iterate through it with i
     for i in s:
-        logger2.logger.info(i)
+        logger2.logger.debug(i)
 
     # add to db
     new_creature = {
     "species_type": i["species_type"],
-    "img": i["species_img"],
     "size": i["size"],
 
     "sleep_dur": i["sleep_duration"],
@@ -70,17 +56,20 @@ def generate_creature(creature_type):
     "speed": i["speed"],
     "fov": i["fov"],
 
-    "age": 0,
+    "age": .0000025,
 
     "x": 250,
     "y": 250,
     "task_q": [],
     "active_task": [],
+    "repr_cooldown": [0, 25],
+    "offspring": 0,
     
     # type: [observation count, investigation count, reaction code]  ## .5 knowledge indicates own species
     "knowledge_base": {creature_type: [.5, .5, 1]},
     
-    "is_alive": True,
+    "is_alive": True
+    
     }
     
 

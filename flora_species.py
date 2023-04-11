@@ -57,9 +57,6 @@ def generate_flora_species():
     flora_species_type = names.generate_name()
     size = random.choice(plant_size_pool)
     flora_type = random.choice(type_pool)
-    
-    # select image
-    flora_img = "game_imgs.flor_imgs.choose_flor_img(size)"
 
     # will be generated
     energy = 100
@@ -67,7 +64,7 @@ def generate_flora_species():
     # will be generated (spread distance 0-10, chance for spread 10 - 100%, counter, cooldown)
     spread_distance = core.roll(1,10)
     spread_chance = core.roll(1,100)
-    cooldown = core.roll(100,100)
+    cooldown = core.roll(10,100)
     growth_data = (spread_distance, spread_chance, 0, cooldown)
     
     # herbarium is collection in mongo
@@ -77,8 +74,7 @@ def generate_flora_species():
         "size": size,
         "flora_type": flora_type,
         "energy" : energy,
-        "growth_data" : growth_data,
-        "img": flora_img
+        "growth_data" : growth_data
         }
 
     # add to herbarium

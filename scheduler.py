@@ -2,6 +2,8 @@ import logger2
 import mongotest
 import creature
 import flora
+import compendiums
+import census_data
 
 
 
@@ -21,7 +23,7 @@ def scheduler_run():
 
             creature.creature_action(j)
 
-    print("\n")
+
 
     # pull list of population -id from db
     f = mongotest.get_flora_population()
@@ -32,6 +34,8 @@ def scheduler_run():
         for l in ind:
 
             flora.flora_action(l)
+
+
 
 
 

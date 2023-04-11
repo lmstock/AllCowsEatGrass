@@ -12,17 +12,31 @@ def open_collection_window(collection):
         for k in collection.keys():
             sample = []
             sample.append(k)
-        for l in collection[sample[0]].keys():
-            headers.append(l)
+
+        if sample == []:
+            headers = [["no data"]]
+            return headers
+        else:
+
+            for l in collection[sample[0]].keys():
+                headers.append(l)
+
+
         return headers
 
     def get_rows():
         rows = []
-        for v in collection.values():
-            row = []
-            for i in v.values():
-                row.append(i)
-            rows.append(row)
+
+        if collection.values() == []:
+            rows = [["no data"]]
+        else:
+            for v in collection.values():
+                row = []
+                for i in v.values():
+                    row.append(i)
+                rows.append(row)
+                #print(rows)
+
         return rows
     
     def sort_table(table, cols):
@@ -46,9 +60,9 @@ def open_collection_window(collection):
     headers = get_headers()
     data = get_rows()
 
-    table1 = sg.Table(values=data[:][:], headings=headers, auto_size_columns=True, justification='center', key="-TABLE-", vertical_scroll_only=False, expand_x=True, expand_y=True, enable_click_events=True)
+    table1 = sg.Table(values=data[:][:], headings=headers, auto_size_columns=True, justification='center', key="-TABLE-", vertical_scroll_only=False, expand_x=True, expand_y=True, enable_click_events=True, display_row_numbers=True)
     layout_collection = [[table1],[sg.Text('Cell clicked:'), sg.T(k='-CLICKED-')],[sg.Button("CLOSE")]]
-    window = sg.Window("Collections Window", layout_collection, resizable=True)
+    window = sg.Window("Collections Window", layout_collection, resizable=True, size=(800,600))
 
     table_sorting = [1, "asc"]  # sorting flag
 

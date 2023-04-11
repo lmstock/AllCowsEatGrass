@@ -8,15 +8,53 @@ import mongotest
 def trigger_tasks(s):
     logger2.logger.debug("trigger_tasks")
 
-    # tracking inds
-    # logger2.logger.info("YOU ARE HERE")
-    # print(s)
-
     x = check_current_rest(s)
     x = check_current_satiety(x)
     x = check_health(x)
+    x = check_division(x)
+    x = wellness_check(x)
 
     return x
+
+# HEALTH IMPROVES IF SAT AND REST ARE >90%
+def wellness_check(x):
+    logger2.logger.debug("wellness_check")
+
+    if x['rest'][0] >= x['rest'][1] * .75 and x['satiety'][0] >= x['satiety'][1] * .75:
+        x['health'][0] = x['health'][0] + 1
+
+    if x['health'][0] > x['health'][1]:
+        x['health'][0] = x['health'][1]
+
+    return x
+
+
+# DIVISION TRIGGER
+def check_division(x):
+
+    def check_cooldown(f):
+        logger2.logger.debug("check_cooldown")
+        if f['repr_cooldown'][0] >= f['repr_cooldown'][1]:
+            logger2.logger.debug("passed cool down")
+            return True
+        else: 
+            logger2.logger.debug("failed cool down")
+
+            # increment cool down
+            f['repr_cooldown'][0] = f['repr_cooldown'][0] + 1
+            return False
+        
+    pass_cooldown = check_cooldown(x)
+    if pass_cooldown == False:
+        return x
+    
+    else:
+        divide = ["divide", 2, 0, 1]
+        if divide not in x['task_q']:
+            x['task_q'].append(divide)
+            x['repr_cooldown'][0] = 0
+            
+        return x
 
 
 
@@ -45,7 +83,6 @@ def check_current_rest(x):
 
             else:
                 for i in x['task_q']:
-                    print(x['task_q'])
                     if i[0] == "sleep":
                         x['task_q'].remove(i)
                 
@@ -127,7 +164,7 @@ def check_health(x):
         x['health'][0] = x['health'][0] - loss
 
     if x['health'][0] <= 0:
-        logger2.logger.info("health <= 0")
+        logger2.logger.debug("health <= 0")
         x['health'][0] = 0
         x['is_alive'] = False
         x['task_q'] = []

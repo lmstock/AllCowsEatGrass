@@ -30,7 +30,6 @@ def fence(x):
     if x['y'] < -999:
         x['y'] = -999
 
-
     return x
 
 def check_active_task(x):
@@ -45,7 +44,7 @@ def check_active_task(x):
         return x
 
     # check active task for completion
-    elif x['active_task'][2] >= x['active_task'][3]:
+    if x['active_task'][2] >= x['active_task'][3]:
         x['active_task'] = []
         return x
     else: return x
@@ -82,4 +81,40 @@ def promote_task_q(x):
             pass
 
     return x
+
+
+def whatsmyname(name, mutation_count):
+
+    def ltr_to_nbr(l):
+        alphamap = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6,
+                    'g': 7, 'h': 8, 'i':9}
+        
+        for k,v in alphamap.items():
+            if k == l:
+                return v
+            
+    def nbr_to_ltr(n):
+        alphamap = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6,
+                    'g': 7, 'h': 8, 'i':9, 'j':10, 'k':11, 'l':12,
+                    'm':13, 'n':14, 'o':15, 'p':16, 'q':17, 'r':18, 
+                    's':19, 't':20, 'u':21, 'v':22, 'w':23, 'x':24,
+                    'y':25, 'z':26 }
+        
+        for k,v in alphamap.items():
+            if v == n:
+                return k
+            
+    if mutation_count == 0:
+        mutation_name = name + ".a"
+        return mutation_name
+
+    elif mutation_count > 0:
+
+        # increment ct and change to letter
+        n = mutation_count + 1
+        n = nbr_to_ltr(n)
+
+        mutation_name = name + "." + n
+    
+        return mutation_name
 

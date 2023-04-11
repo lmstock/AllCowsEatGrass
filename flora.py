@@ -51,18 +51,16 @@ def flora_action(f):
             # check for duplicate species at that location
             def check_for_duplicate(species,x,y):
                 msg = str(x) + " " + str(y) + " check for duplicate"
-                logger2.logger.info(msg)
+                logger2.logger.debug(msg)
 
                 # db function
                 cursor = mongotest.check_for_dup(species, x, y)
                 for i in cursor:
                     if i['x'] == x and i['y'] == y:
-                        msg = to_color.Colors.fg.blue + "duplicate true" + to_color.Colors.reset
-                        logger2.logger.info(msg)
                         return True
                     else:
                         
-                        logger2.logger.info("duplicate false")
+                        logger2.logger.debug("duplicate false")
                         return False
 
             x = f['x']
@@ -119,13 +117,6 @@ def flora_action(f):
         return f
 
 
-
-    
-
-
-
-
-
     f = increment_turn(f)
     f = growth_check(f)
 
@@ -134,13 +125,13 @@ def flora_action(f):
         
 # always print flora gen to terminal
 def generate_flora(flora_type, x, y):
-    logger2.logger.info("generate flora")
+    logger2.logger.debug("generate flora")
 
     s = mongotest.read_flora_species("flora_species_type", flora_type)
 
     # iterate through with i
     for i in s:
-        print(to_color.Colors.fg.green, i, to_color.Colors.reset)
+        print(to_color.Colors.fg.green, i['_id'], " a ", i['flora_species_type'], " has been produced ", to_color.Colors.reset)
 
     # add to db
     new_flora = {
@@ -152,10 +143,9 @@ def generate_flora(flora_type, x, y):
         "x": x,
         "y": y,
         "age": 0,
-        "img": i['img']
+        "offspring": 0
     }
 
-    logger2.logger.debug(str(new_flora))
     mongotest.add_flora(new_flora)
 
 

@@ -12,8 +12,7 @@ def history_tracking(x):
     my_id = x['_id']
     h = mongotest.get_hist_data(my_id)
 
-    # check if return is empty
-    
+    # add id if id not present
     if h == None:
         i = {
             "_id" : my_id,

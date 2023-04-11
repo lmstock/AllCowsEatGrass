@@ -20,9 +20,6 @@ def generate_creature_species():
     head = random.choice(species_pools.head_pool)
     size = random.choice(species_pools.body_size_pool)
     body_type = random.choice(species_pools.body_type_pool)
-
-    # select image
-    species_img = "cret_imgs.choose_cret_img(size)"
     
 
     def gen_sleep_habits():
@@ -30,11 +27,11 @@ def generate_creature_species():
         #sleep_roll    10d9 for % sleep vs awake in a day
         
         sleep_roll = core.roll(10,9)
-        sleep_duration = round((sleep_roll/100) * int(game_conf.w.ticks_per_day), 2)
+        sleep_duration = 10  # round((sleep_roll/100) * int(game_conf.w.ticks_per_day), 2)
         awake_duration = round(1000 - sleep_duration, 2)
 
         fully_rested = core.roll(5,15) * 10   # 5d20 * 10 for full energy (5, 500)
-        rest_gain = round(fully_rested/sleep_duration, 2)
+        rest_gain =  25   # round(fully_rested/sleep_duration, 2)
         base_fatigue = round((fully_rested/awake_duration) * -1, 2)
         return sleep_duration, fully_rested, rest_gain, base_fatigue
 
@@ -63,9 +60,6 @@ def generate_creature_species():
         "size": size,
         "body_type": body_type,
 
-        # this need to be str?
-        "species_img": str(species_img),
-
         "rest": rest,
         "sleep_duration": sleep_duration,
         "rest_gain": rest_gain,
@@ -76,7 +70,9 @@ def generate_creature_species():
         "energy": energy,
 
         "speed": speed,
-        "fov": fov
+        "fov": fov,
+        'mutation_count': 0,
+        "repr_cooldown": [0, 20]
         }
 
     # add to bestiary

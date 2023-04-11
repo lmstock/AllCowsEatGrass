@@ -94,8 +94,8 @@ def increment_turn(x):
     logger2.logger.debug("increment_turn")
 
     # identify creature in logger
-    # msg = "\033[32m" + "i am: " + str(x['_id']) + " " + str(x['species_type']) + "\033[0m"
-    # logger2.logger.info(msg)
+    msg = "\033[32m" + "i am: " + str(x['_id']) + " " + str(x['active_task']) + "\033[0m"
+    logger2.logger.debug(msg)
 
     def inc_rest(x):
         x['rest'][0] = round(x['rest'][0] + x['rest'][1], 2)
@@ -109,9 +109,13 @@ def increment_turn(x):
         x = inc_rest(x)
         x = inc_sat(x)
 
+    elif x['active_task'][0] != "sleep" and x['active_task'][0] != "eat":
+        x = inc_rest(x)
+        x = inc_sat(x)
+
     elif x['active_task'][0] != "sleep":
         x = inc_rest(x)
-        
+
     elif x['active_task'][0] != "eat":
         x = inc_sat(x)
         

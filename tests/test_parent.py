@@ -31,7 +31,7 @@ def divide_creature(parent_id):
         "size": p["size"],
         
         # mutables
-        "sleep_dur": p["sleep_dur"],  # set these [0]s to max on new creature creation
+        "sleep_dur": p["sleep_dur"],  # creature division brings parent currents to child
         "rest_gain": p["rest_gain"],
         "rest": p["rest"],  
         "satiety": p["satiety"],
@@ -58,13 +58,75 @@ def divide_creature(parent_id):
     mutables = ['sleep_dur', 'rest_gain', 'rest', 'satiety', 'energy', 'hostility', 'health', 'speed', 'fov']
     direction = ['loss', 'gain']
     amount = random.randrange(5,20)
+
     m = random.choice(mutables)
     d = random.choice(direction)
-    print(m, d, amount)
+
+    # APPLY  MUTATION TO NEW CREATURE
+    if m == 'rest':
+        a = (p['rest'][2] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
+
+    elif m == 'satiety':
+        a = (p['satiety'][2] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
+
+    elif m == 'energy':
+        a = (p['energy'][1] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
+
+    elif m == 'satiety':
+        a = (p['satiety'][2] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
     
-    # APPLY THIS MUTATION TO NEW CREATURE
+    elif m == 'health':
+        a = (p['health'][1] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
 
+    elif m == 'speed':
+        a = (p['speed'] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
 
+    elif m == 'fov':
+        a = (p['fov'] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
+
+    elif m == 'sleep_dur':
+        a = (p['sleep_dur'] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
+    
+    elif m == 'rest_gain':
+        a = (p['rest_gain'] * amount * .01)
+        if d == 'loss':
+            new_creature[m][2] = new_creature[m][2] - a
+        else:
+            new_creature[m][2] = new_creature[m][2] + a
+    
+    print("a: ", a)
 
 
     print(new_creature)

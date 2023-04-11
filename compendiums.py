@@ -1,26 +1,28 @@
 
 import game_conf
 import mongotest
+import shutil
+import logger2
 
 
 # write html file with game data
 # titles
-compendium_title = "Alkows Compendium 2"
-pop_title = "Alkows Populuation Data 1"
+compendium_title = "Alkows Compendium"
+pop_title = "Alkows Compendium"
 
 # css
 style_sheet = "style.css"
 
 # file paths
 compendium3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium3.html"
+cp_compendium3 = "G:\\compendium3.html"
 
 # db functions
-pop = mongotest.get_population()
 bestiary = mongotest.get_bestiary()
 herbarium = mongotest.get_herbarium()
 
 # headers
-bestiary_headers = ["_id", "species_type", "head", "size", "body_type"]
+bestiary_headers = ["_id", "species_type", "size", "body_type", "head"]
 herbarium_headers = ["_id", "flora_species_type", "size", "energy", "growth_data"]
 
 
@@ -47,18 +49,18 @@ def body_html(file_path, title):
         dash.write(
             "\t<body>\n"
             "\t\t<h1>" + title + "</h1>\n"  
-            "\t\t<p> current_tick:  " + str(game_conf.g.current_tick) + "</p>\n"
+            "\t\t<p> current_tick:  " + str(game_conf.w.current_tick) + "</p>\n"
         )
 
-def table(file_path, pop):
+# def table(file_path, pop):
 
 
-    for i in pop:
-        with open (file_path, "a") as dash:
+#     for i in pop:
+#         with open (file_path, "a") as dash:
 
-            dash.write(
-                "<p>" + str(i) + "</p>"
-            )
+#             dash.write(
+#                 "<p>" + str(i) + "</p>"
+#             )
 
 
 def append_html_tables(file_path, this_dict, header_list, table_name):
@@ -91,7 +93,6 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
                 for i in listz:
                     map[i] = ct
                     ct = ct + 1
-                print("map: ", map)
                 return map
 
             header_map = map_header_order(header_list)
@@ -126,10 +127,15 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
                 "<br>\n"
                 )
 
-write_html_head(compendium3,compendium_title,style_sheet)
-body_html(compendium3,compendium_title)
 
-append_html_tables(compendium3, bestiary, bestiary_headers, "bestiary")
-append_html_tables(compendium3, herbarium, herbarium_headers, "herbarium")
 
-table(compendium3, pop)
+def compendium_report():
+    logger2.logger.debug("compendium_report")
+
+    write_html_head(compendium3,compendium_title,style_sheet)
+    body_html(compendium3,compendium_title)
+
+    append_html_tables(compendium3, bestiary, bestiary_headers, "bestiary")
+    append_html_tables(compendium3, herbarium, herbarium_headers, "herbarium")
+
+    shutil.copyfile(compendium3, cp_compendium3)

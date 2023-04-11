@@ -6,8 +6,6 @@ import core
 def increment_active_task(s):
     logger2.logger.debug("increment_active_task")
 
-    print(s['active_task'])
-
     #if active_task is empty, pass
     if s['active_task'] == []:
 
@@ -28,6 +26,9 @@ def increment_active_task(s):
         
         elif s['active_task'][0] == "play":
             result = ca.play(s)
+
+        elif s['active_task'][0] == "divide":
+            result = ca.divide(s)
 
         elif s['active_task'][0] == "die":
             result = ca.die(s)
