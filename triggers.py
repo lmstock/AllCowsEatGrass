@@ -1,7 +1,7 @@
 
 import random
 import logger2 
-import mongotest
+import bartokmongo
 
 ### TASK_Q = [action string, priority, current turn, max turn]
 
@@ -13,6 +13,7 @@ def trigger_tasks(s):
     x = check_health(x)
     x = check_division(x)
     x = wellness_check(x)
+    x = check_hostility(x)
 
     return x
 
@@ -55,8 +56,6 @@ def check_division(x):
             x['repr_cooldown'][0] = 0
             
         return x
-
-
 
 # SLEEP TRIGGER
 def check_current_rest(x):
@@ -122,6 +121,7 @@ def check_current_satiety(x):
 
     # if satiety less than 40%
     if x['satiety'][0] < x['satiety'][2] * .4:
+
         
         # remove old eat tasks from task_q if present
         def remove_old_eats():
@@ -172,5 +172,47 @@ def check_health(x):
 
     return x
 
+# CHECK HOSTILITY (triggers attack)
+def check_hostility(x):
+    logger2.logger.debug("check_hostility")
+
+    if x['active_task'] == []:
+        pass
+
+    elif x['active_task'][0] == "attack":
+        return x
+    
+    elif x['active_task'][0] == "die":
+        return x
+
+    if x['hostility'][0] >= x['hostility'][1] * .9:
+        msg = " \033[31ma creature " + str(x['_id']) + " has become hostile !\033[0m"
+        logger2.logger.info(msg)
+
+        # returns if there are no local crets
+        if len(x['local_crets']) <= 1 :
+            return x
+
+        else: 
+            lc = x['local_crets']
+
+            # create list of local cret ids
+            local_cret_ids = []
+            for i in lc:
+                local_cret_ids.append(i[0])
+
+            # remove self from local crets ids list
+            if x['_id'] in local_cret_ids:
+                local_cret_ids.remove(x['_id'])
+
+            # choose and set target at random from local crets
+            x['target'] = random.choice(local_cret_ids)
+
+            # set active task to attack
+            x['active_task'] = ["attack", 1, 0, 3]
+                
+            return x
+    else:
+        return x
 
 

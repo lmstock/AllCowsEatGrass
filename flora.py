@@ -1,7 +1,7 @@
 import random
 
 import logger2
-import mongotest
+import bartokmongo
 import game_conf
 import core
 import to_color
@@ -54,7 +54,7 @@ def flora_action(f):
                 logger2.logger.debug(msg)
 
                 # db function
-                cursor = mongotest.check_for_dup(species, x, y)
+                cursor = bartokmongo.check_for_dup(species, x, y)
                 for i in cursor:
                     if i['x'] == x and i['y'] == y:
                         return True
@@ -121,13 +121,13 @@ def flora_action(f):
     f = growth_check(f)
 
 
-    mongotest.update_flora_byid(f['_id'], f)
+    bartokmongo.update_flora_byid(f['_id'], f)
         
 # always print flora gen to terminal
 def generate_flora(flora_type, x, y):
     logger2.logger.debug("generate flora")
 
-    s = mongotest.read_flora_species("flora_species_type", flora_type)
+    s = bartokmongo.read_flora_species("flora_species_type", flora_type)
 
     # iterate through with i
     for i in s:
@@ -146,12 +146,12 @@ def generate_flora(flora_type, x, y):
         "offspring": 0
     }
 
-    mongotest.add_flora(new_flora)
+    bartokmongo.add_flora(new_flora)
 
 
 def get_random_flora_type():
     logger2.logger.debug("get_random_flora_type")
-    return random.choice(mongotest.list_flora())
+    return random.choice(bartokmongo.list_flora())
 
 def generate_random_flora():
     logger2.logger.info("generate_random_flora")

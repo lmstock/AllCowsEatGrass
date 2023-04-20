@@ -1,6 +1,6 @@
 
 import game_conf
-import mongotest
+import bartokmongo
 import shutil
 import logger2
 
@@ -18,8 +18,8 @@ compendium3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium3.h
 cp_compendium3 = "G:\\compendium3.html"
 
 # db functions
-bestiary = mongotest.get_bestiary()
-herbarium = mongotest.get_herbarium()
+bestiary = bartokmongo.get_bestiary()
+herbarium = bartokmongo.get_herbarium()
 
 # headers
 bestiary_headers = ["_id", "species_type", "size", "body_type", "head"]

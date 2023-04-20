@@ -1,6 +1,6 @@
 import random
 
-import mongotest
+import bartokmongo
 import names
 import logger2
 import core
@@ -63,7 +63,7 @@ def generate_flora_species():
 
     # will be generated (spread distance 0-10, chance for spread 10 - 100%, counter, cooldown)
     spread_distance = core.roll(1,10)
-    spread_chance = core.roll(1,100)
+    spread_chance = core.roll(1,50)
     cooldown = core.roll(10,100)
     growth_data = (spread_distance, spread_chance, 0, cooldown)
     
@@ -78,4 +78,4 @@ def generate_flora_species():
         }
 
     # add to herbarium
-    mongotest.add_flora_species(new_flora_species)
+    bartokmongo.add_flora_species(new_flora_species)

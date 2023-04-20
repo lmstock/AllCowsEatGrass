@@ -1,9 +1,9 @@
 import random
-
-import mongotest
+import game_conf
+import bartokmongo
 import names
 import logger2
-import game_conf
+
 import core
 import species_pools
 
@@ -25,13 +25,15 @@ def generate_creature_species():
     def gen_sleep_habits():
         logger2.logger.debug("gen_sleep_habits")
         #sleep_roll    10d9 for % sleep vs awake in a day
+
+        tpd = int(game_conf.w.ticks_per_day)
         
-        sleep_roll = core.roll(10,9)
-        sleep_duration = 10  # round((sleep_roll/100) * int(game_conf.w.ticks_per_day), 2)
-        awake_duration = round(1000 - sleep_duration, 2)
+        sleep_roll = core.roll(10,9)    # how long a creature sleeps in ticks
+        sleep_duration = round((sleep_roll/100) * tpd, 2)
+        awake_duration = round(tpd - sleep_duration, 2)
 
         fully_rested = core.roll(5,15) * 10   # 5d20 * 10 for full energy (5, 500)
-        rest_gain =  25   # round(fully_rested/sleep_duration, 2)
+        rest_gain =  round(fully_rested/sleep_duration, 2)
         base_fatigue = round((fully_rested/awake_duration) * -1, 2)
         return sleep_duration, fully_rested, rest_gain, base_fatigue
 
@@ -42,14 +44,15 @@ def generate_creature_species():
     sleep_duration = s[0]
     rest_gain = s[2]
 
-
-    satiety = [100, -1, 100]  # (current satiety, loss per turn, max satiety)
-    hostility = [100, 100]
+    sat_loss = core.roll(1,5) * -1
+    satiety = [100, sat_loss, 100]  # (current satiety, loss per turn, max satiety)
+    hostility = [0,core.roll(3,33)]
     health = [100, 100]
     energy = [100, 100]
 
     speed = core.roll(15,10)
     fov = 1000
+    repr = core.roll(10, 50)
 
     
     # bestiary is collection in mongo
@@ -72,11 +75,11 @@ def generate_creature_species():
         "speed": speed,
         "fov": fov,
         'mutation_count': 0,
-        "repr_cooldown": [0, 20]
+        "repr_cooldown": [0, repr]
         }
 
     # add to bestiary
-    mongotest.add_creature_species(new_creature_species)
+    bartokmongo.add_creature_species(new_creature_species)
 
 
 

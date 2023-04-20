@@ -1,6 +1,6 @@
 
 import logger2
-import mongotest
+import bartokmongo
 
 
 
@@ -11,19 +11,19 @@ import mongotest
 def observe_fov(x):
     logger2.logger.debug("observe_fov")
 
-    # chance to check fov, because we arent always paying attention
-
     # list of tuples (cret id, species type, active task)
-    local_crets = mongotest.get_locals(x['x'],x['y'],x['fov'])
-    return x, local_crets
+    local_crets = bartokmongo.get_locals(x['x'],x['y'],x['fov'])
+    x['local_crets'] = local_crets
+
+    # returns x without updating local crets in db
+    return x
 
 
-# Updates details of things observed in fov
-def update_kb(input):
+# Updates kb details of things observed in fov
+def update_kb(x):
     logger2.logger.debug("update_kb")
 
-    x = input[0]
-    local_crets = input[1]
+    local_crets = x['local_crets']
 
     if local_crets == False:
         pass
@@ -41,7 +41,7 @@ def update_kb(input):
             else:
                 x['knowledge_base'][species_name][0] = x['knowledge_base'][species_name][0] + 1 
 
-            # check if cret action is na
+            # check if cret action is empty
             if i[2] == []:
                 # if no current action
                 x['knowledge_base'][species_name][2] = 1
@@ -78,7 +78,7 @@ def update_kb(input):
     return x
 
 
-# PASSIVE ACTION - NEEDS TESTS WRITTEN
+# PASSIVE ACTION - in this function we run  observer_fov and update_kb()
 def observe(x):
     logger2.logger.debug("observe")
     # observing serves to update the knowledge base, reaction code

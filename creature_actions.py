@@ -1,8 +1,8 @@
 import random
 import core
 import logger2
-import mongotest
-import creature
+import bartokmongo
+
 
 
 
@@ -34,7 +34,7 @@ def eat(x):
     # increase satiety
     x['satiety'][0] = round(x['satiety'][0] + 33, 2)  
 
-    # do not exceed max_rest remove from active task if full
+    # do not exceed max_satiety remove from active task if full
     if x['satiety'][0] >= x['satiety'][2]:
         x['satiety'][0] = x['satiety'][2]
 
@@ -95,7 +95,7 @@ def investigate(x):
 
 
 # WANDER FASTER
-def play(x):
+def run(x):
 
     # increment active_task
     x = core.incr_active_task(x)
@@ -140,189 +140,63 @@ def die(x):
     logger2.logger.info(msg)
 
     x['is_alive'] = False
-    mongotest.remove_individual_byid(x["_id"])
-    mongotest.add_to_mortuary(x)
+    bartokmongo.remove_individual_byid(x["_id"])
+    bartokmongo.add_to_mortuary(x)
     return x
     
 
-# creates a creature from parent through "creature division"
-# x = parent
-def divide(p):
-    logger2.logger.debug("divide")
+# ATTACK
+def attack(x):
+    # attack another creature
+    logger2.logger.debug("attack")
 
-    # reset cooldown before division
-    p['repr_cooldown'][0] = 0
+    # retreat if low health
+    if x['health'][0] <= x['health'][1] * .2:
+        logger2.logger.info("the attacker is retreating!")
+        x['active_task'] = ['run', 1, 0, 3]  # this needs a direction
+        x['target'] = None
+        return x
 
-    # clear active task
-    p['active_task'] = []  
+    if x['target'] == 0 or x['target'] == None:
+        logger2.logger.error("an attack was triggered but there was no target")
+        return x
 
-    # count offspring
-    if 'offspring' not in p: 
-        p['offspring'] = 1
+    # identify target set in trigger and get info
+    target = bartokmongo.read_ind_by_id(x['target'])
 
-    else:
-        p['offspring'] = p['offspring'] + 1
+    # check for proximity before attacking
+    if abs(target['x'] - x['x']) > 2 or abs(target['y'] - x['y']) > 2:
+        logger2.logger.info("target not in range")
 
-    parent_species_type = p['species_type']
-
-
-    def mutate(x):
-        # gen mutation - 
-        # mutation 5-20% more or less
-        mutables = ['sleep_dur', 'rest_gain', 'rest', 'satiety', 'energy', 'hostility', 'health', 'speed', 'fov', 'repr_cooldown']
-        direction = ['loss', 'gain']
-        amount = random.randrange(5,20)
-
-        m = random.choice(mutables)
-        d = random.choice(direction)
-
-        # pull parent species from bestiary
-        parent_species_type = x['species_type']
-        s = mongotest.read_creature_species_du('species_type', parent_species_type)
-
-
-        # create mutation and add to bestiary
-        def add_mutated_species_to_bestiary(x, m, d, amount):
-            logger2.logger.debug("add_mutation_to_bestiary")
-
-            # setup new species
-            new_species = {
-                "species_type": x['species_type'],
-                "head": x['head'],
-                "size": x['size'],
-                "body_type": x['body_type'],
-
-                "rest": x['rest'],
-                "sleep_duration": x['sleep_duration'],
-                "rest_gain": x['rest_gain'],
-
-                "satiety": x['satiety'],
-                "hostility": x['hostility'],
-                "health": x['health'],
-                "energy": x['energy'],
-
-                "speed": x['speed'],
-                "fov": x['fov'],
-                'mutation_count': 0,
-                "repr_cooldown": [0, 100]
-            }
-
-            # get count for naming scheme below
-            original_mutation_count = x['mutation_count']
-
-            # increment mutation count of parent
-            ct = x['mutation_count'] = x['mutation_count'] + 1
-            update =  {"$set": {"mutation_count": ct}}
-            mongotest.update_species_by_name(parent_species_type, update)
-
-            # update new species name
-            name = x['species_type']
-            my_new_species_name = core.whatsmyname(name, original_mutation_count)
-            new_species['species_type'] = my_new_species_name
-
-            # APPLY  MUTATION TO NEW SPECIES
-            if m == 'rest':
-                a = round(p['rest'][2] * amount * .01)
-                if d == 'loss':
-                    new_species[m][2] = new_species[m][2] - a
-                else:
-                    new_species[m][2] = new_species[m][2] + a
-
-            elif m == 'satiety':
-                a = round(p['satiety'][2] * amount * .01)
-                if d == 'loss':
-                    new_species[m][2] = new_species[m][2] - a
-                else:
-                    new_species[m][2] = new_species[m][2] + a
-
-            elif m == 'energy':
-                a = round(p['energy'][1] * amount * .01)
-                if d == 'loss':
-                    new_species[m][1] = new_species[m][1] - a
-                else:
-                    new_species[m][1] = new_species[m][1] + a
-
-            elif m == 'hostility':
-                a = round(p['hostility'][1] * amount * .01)
-                if d == 'loss':
-                    new_species[m][1] = new_species[m][1] - a
-                else:
-                    new_species[m][1] = new_species[m][1] + a
-            
-            elif m == 'health':
-                a = round(p['health'][1] * amount * .01)
-                if d == 'loss':
-                    new_species[m][1] = new_species[m][1] - a
-                else:
-                    new_species[m][1] = new_species[m][1] + a
-
-            elif m == 'speed':
-                a = round(p['speed'] * amount * .01)
-                if d == 'loss':
-                    new_species[m] = new_species[m] - a
-                else:
-                    new_species[m] = new_species[m] + a
-
-            elif m == 'fov':
-                a = round(p['fov'] * amount * .01)
-                if d == 'loss':
-                    new_species[m] = new_species[m] - a
-                else:
-                    new_species[m] = new_species[m] + a
-
-            elif m == 'sleep_duration':
-                a = round(p['sleep_duration'] * amount * .01)
-                if d == 'loss':
-                    new_species[m] = new_species[m] - a
-                else:
-                    new_species[m] = new_species[m] + a
-            
-            elif m == 'rest_gain':
-                a = round(p['rest_gain'] * amount * .01)
-                if d == 'loss':
-                    new_species[m] = new_species[m] - a
-                else:
-                    new_species[m] = new_species[m] + a
-
-            elif m == 'repr_cooldown':
-                a = round(p['repr_cooldown'][1] * amount * .01)
-                if d == 'loss':
-                    new_species[m][1] = new_species[m][1] - a
-                else:
-                    new_species[m][1] = new_species[m][1] + a
-
-            mongotest.add_creature_species(new_species)
-            announcement = '\033[34m' + str(my_new_species_name) + ',  A new species has evolved! \033[0m'
-            logger2.logger.info(announcement)
-            return new_species['species_type']
-
-        # this returns the type for creature gen below
-        new_species_name = add_mutated_species_to_bestiary(s, m, d, amount)
-    
-        return new_species_name
-    
-
-    
-    
-    
-    mutation_check = core.roll(1,10)
-    
-    if mutation_check == 5:
-        # mutate species
-        species_type = mutate(p)
-
+        # go to location function
+        pass
 
     else:
-        # gen offspring from parentf
-        species_type = parent_species_type
 
+        # announce attack
+        msg = " \033[31ma creature " + str(x['_id']) + " is attacking another " + str(target['_id']) + " !\033[0m"
+        logger2.logger.info(msg)
 
-    # gen creature from new species
-    creature.generate_creature(species_type)
+        # determine damage        # check for full parry
+        attack_dmg = 10           # this will vary in the future
     
-    announcement = '\033[32m' + str(species_type) + ',  A new creature is born! \033[0m'
-    logger2.logger.info(announcement)
+        target_health = target['health']  # [current, max]
+        total = target_health[0] - attack_dmg
+        health = [total, target_health[1]]
+        update = {'health': health}
 
-    return p
+
+        # defense damage
+        x['health'][0] = x['health'][0] - target['defend']
+
+        # update opponent
+        bartokmongo.update_cret_byid(target['_id'], update)
+
+
+
+    return x
+
+
+
 
     

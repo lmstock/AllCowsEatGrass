@@ -1,5 +1,5 @@
 import random
-import logger2
+import logger2, bartokmongo
 
 
 
@@ -117,4 +117,8 @@ def whatsmyname(name, mutation_count):
         mutation_name = name + "." + n
     
         return mutation_name
+
+
+
+
 

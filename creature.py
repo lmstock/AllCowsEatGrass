@@ -1,7 +1,7 @@
 
 import random
 import historical
-import mongotest
+import bartokmongo
 import logger2
 import inc_turn
 import triggers
@@ -23,7 +23,7 @@ def creature_action(s):
     
     else:
         historical.history_tracking(s) # save data in increments of x in order to capture longer term data
-        mongotest.update_cret_byid(s['_id'], s)
+        bartokmongo.update_cret_byid(s['_id'], s)
 
 
 
@@ -32,7 +32,7 @@ def generate_creature(creature_type):
     logger2.logger.debug("generate_creature")
 
     # this will return cursor object
-    s = mongotest.read_creature_species("species_type", creature_type)
+    s = bartokmongo.read_creature_species("species_type", creature_type)
     
     # iterate through it with i
     for i in s:
@@ -41,7 +41,9 @@ def generate_creature(creature_type):
     # add to db
     new_creature = {
     "species_type": i["species_type"],
+    "head": i["head"],
     "size": i["size"],
+    "body_type": i["body_type"],
 
     "sleep_dur": i["sleep_duration"],
     "rest_gain": i["rest_gain"],
@@ -62,9 +64,15 @@ def generate_creature(creature_type):
     "y": 250,
     "task_q": [],
     "active_task": [],
-    "repr_cooldown": [0, 25],
+    "repr_cooldown": i['repr_cooldown'],
     "offspring": 0,
+    "attack": 10,
+    "defend": 10,
+    "target": 0,  # cret id
     
+    # creatures within fov
+    "local_crets": [],
+
     # type: [observation count, investigation count, reaction code]  ## .5 knowledge indicates own species
     "knowledge_base": {creature_type: [.5, .5, 1]},
     
@@ -73,11 +81,11 @@ def generate_creature(creature_type):
     }
     
 
-    mongotest.add_creature(new_creature)
+    bartokmongo.add_creature(new_creature)
 
 
 def get_random_creature_type():
     logger2.logger.debug("get_random_creature_type")
-    return random.choice(mongotest.list_beasts())
+    return random.choice(bartokmongo.list_beasts())
     
 

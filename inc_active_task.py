@@ -1,5 +1,6 @@
 
 import creature_actions as ca
+import creature_repr_actions as cra
 import logger2
 import core
 
@@ -28,7 +29,13 @@ def increment_active_task(s):
             result = ca.play(s)
 
         elif s['active_task'][0] == "divide":
-            result = ca.divide(s)
+            result = cra.divide(s)
+
+        elif s['active_task'][0] == "attack":
+            result = ca.attack(s)
+
+        elif s['active_task'][0] == "defend":
+            result = ca.defend(s)
 
         elif s['active_task'][0] == "die":
             result = ca.die(s)

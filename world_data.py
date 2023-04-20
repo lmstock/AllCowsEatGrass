@@ -1,6 +1,6 @@
 
 # #clear old data from db
-# mongotest.clear_db()
+# bartokmongo.clear_db()
 
 # for i in range(1,5):
 #     creature_species.generate_creature_species()

@@ -1,4 +1,4 @@
-import mongotest
+import bartokmongo
 import PySimpleGUI as sg
 
 def open_individual_window(collection):

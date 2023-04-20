@@ -1,5 +1,5 @@
 import logger2
-import mongotest
+import bartokmongo
 from bson.objectid import ObjectId
 
 
@@ -10,7 +10,7 @@ def history_tracking(x):
 
     # get doc from history.db
     my_id = x['_id']
-    h = mongotest.get_hist_data(my_id)
+    h = bartokmongo.get_hist_data(my_id)
 
     # add id if id not present
     if h == None:
@@ -29,7 +29,7 @@ def history_tracking(x):
         i['satiety_hist'].append(x['satiety'][0])
         i['rest_hist'].append(x['rest'][0])
 
-        mongotest.add_history(i)
+        bartokmongo.add_history(i)
 
     else:
 
@@ -40,7 +40,7 @@ def history_tracking(x):
         h['rest_hist'].append(x['rest'][0])
 
         # update doc in history.db
-        mongotest.update_history_byid(my_id, h)
+        bartokmongo.update_history_byid(my_id, h)
 
     # removes earliest data point if > "history_duration"
     # if len(x['health_hist']) > hist_duration:
