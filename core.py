@@ -84,14 +84,7 @@ def promote_task_q(x):
 
 
 def whatsmyname(name, mutation_count):
-
-    def ltr_to_nbr(l):
-        alphamap = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6,
-                    'g': 7, 'h': 8, 'i':9}
-        
-        for k,v in alphamap.items():
-            if k == l:
-                return v
+    # will get us to 676 variants from a single species. there is no reason to proceed past that
             
     def nbr_to_ltr(n):
         alphamap = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6,
@@ -108,7 +101,7 @@ def whatsmyname(name, mutation_count):
         mutation_name = name + ".a"
         return mutation_name
 
-    elif mutation_count > 0:
+    elif mutation_count > 0 and mutation_count < 26:
 
         # increment ct and change to letter
         n = mutation_count + 1
@@ -117,6 +110,20 @@ def whatsmyname(name, mutation_count):
         mutation_name = name + "." + n
     
         return mutation_name
+    
+    elif mutation_count >= 26:
+        s = int(mutation_count/26)
+        s = nbr_to_ltr(s)
+
+        n = mutation_count % 26
+        if n == 0:
+            n = str(0)
+        else:
+            n = nbr_to_ltr(n)
+
+        mutation_name = name + "." + s + n
+        return mutation_name
+
 
 
 

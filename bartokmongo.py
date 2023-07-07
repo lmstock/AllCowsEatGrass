@@ -31,10 +31,13 @@ def add_flora(flora):
 
 # === REMOVING === #
 def remove_test_crets():
-    db.population.delete_many({'species_type':{'$regex':'^testcreature'}})
+    logger2.logger.error("remove_test_crets")
+    query = { "species_type" : {'$regex':'^testcreature'}}
+    db.population.delete_many(query)
 
 def remove_test_species():
-    db.bestiary.delete_many({ 'species_type' : {'$regex':'testcreature.a'}})
+    query = { "species_type" : {'$regex':'^testcreature'}}
+    db.bestiary.delete_many(query)
 
 def remove_individual_byid(id):
     logger2.logger.info("remove_individual_byid")
@@ -126,6 +129,11 @@ def mass_extinction_event(collection, percent):
 
 # === READING === #
 
+def get_rand_pop():
+    logger2.logger.info("get_rand_pop")
+    cursor = db.population.aggregate([{"$sample" : {'size': 4}}])
+    return cursor
+
 def find_latest_addition():
     logger2.logger.debug("find_latest_addition")
     x = db.population.find().sort("_id",-1).limit(1)
@@ -173,6 +181,7 @@ def get_cret_census():
         cret_dict.update({i['_id']:i})
     return cret_dict
 
+
 def get_flora_census():
     logger2.logger.debug("get_flora_census")
     flora_collection = db.flora_pop.find()
@@ -213,8 +222,8 @@ def read_creature_species(a , b):
 
 def read_creature_species_du(a , b):
     logger2.logger.debug("read_species")
-    cursor = db.bestiary.find_one({ a : b })
-    return cursor
+    species_dict = db.bestiary.find_one({ a : b })
+    return species_dict
 
 def read_flora_species(a,b):
     logger2.logger.debug("read flora species")
@@ -289,6 +298,9 @@ def update_cret_byid(id, update):
 
     db.population.update_one(id, new_vals)
 
+
+
+
 def update_flora_byid(id, update):
     logger2.logger.debug("update_flora_byid")
 
@@ -300,10 +312,14 @@ def update_flora_byid(id, update):
 
     db.flora_pop.update_one(id, new_vals)
 
+
+
+
 def update_species_by_name(name, update):
-    logger2.logger.info("update_species_by_name")
+    logger2.logger.debug("update_species_by_name")
     by_name = {"species_type": name}
-    db.bestiary.update_one(by_name, update)
+    x = db.bestiary.update_one(by_name, update)
+    print(x.modified_count)
 
 def add_to_mortuary(unit):
     logger2.logger.debug("add_to_mortuary")

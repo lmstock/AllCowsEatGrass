@@ -32,53 +32,35 @@ def generate_creature(creature_type):
     logger2.logger.debug("generate_creature")
 
     # this will return cursor object
-    s = bartokmongo.read_creature_species("species_type", creature_type)
-    
+    s = bartokmongo.read_creature_species_du("species_type", creature_type)
+    new_creature = {}
     # iterate through it with i
-    for i in s:
-        logger2.logger.debug(i)
+    for k,v in s.items():
+        new_creature[k] = v
 
-    # add to db
-    new_creature = {
-    "species_type": i["species_type"],
-    "head": i["head"],
-    "size": i["size"],
-    "body_type": i["body_type"],
+    # remove id
+    new_creature.pop("_id")
+    # remove mutation count
 
-    "sleep_dur": i["sleep_duration"],
-    "rest_gain": i["rest_gain"],
-    "rest": i["rest"],  # fully rested
-    
-    "satiety": i["satiety"],
-    "energy": i["energy"],
-
-    "hostility": i["hostility"],  
-    "health": i["health"],
-
-    "speed": i["speed"],
-    "fov": i["fov"],
-
-    "age": .0000025,
-
-    "x": 250,
-    "y": 250,
-    "task_q": [],
-    "active_task": [],
-    "repr_cooldown": i['repr_cooldown'],
-    "offspring": 0,
-    "attack": 10,
-    "defend": 10,
-    "target": 0,  # cret id
+    new_creature["task_q"] = []
+    new_creature["active_task"] = []
+    new_creature["age"] = .0000025
+    new_creature["x"] = 250
+    new_creature["y"] = 250
+    new_creature["offspring"] = 0
+    new_creature["attack"] = 10
+    new_creature["defend"]= 10
+    new_creature["target"]= 0  # cret id
     
     # creatures within fov
-    "local_crets": [],
+    new_creature["local_crets"] = []
 
     # type: [observation count, investigation count, reaction code]  ## .5 knowledge indicates own species
-    "knowledge_base": {creature_type: [.5, .5, 1]},
+    species_type = new_creature["species_type"]
+    new_creature["knowledge_base"] = {species_type: [.5, .5, 1]}
     
-    "is_alive": True
+    new_creature["is_alive"] = True
     
-    }
     
 
     bartokmongo.add_creature(new_creature)

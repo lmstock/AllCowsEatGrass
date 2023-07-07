@@ -134,8 +134,11 @@ def apply_mutation_to_child(child, mutation, new_species_name):
 def new_species_name(p):
     species_type = p['species_type']
     species = bartokmongo.read_creature_species_du("species_type", species_type)
+    logger2.logger.error(str(species))
+
     count = species['mutation_count']
     nsn = core.whatsmyname(species_type,count)
+    logger2.logger.debug(nsn)
     return nsn
 
 
@@ -143,14 +146,16 @@ def add_species_to_bestiary(c):
 
     new_bestiary_entry = copy.copy(c)
     new_bestiary_entry['mutation_count'] = 0
-    new_bestiary_entry.pop('target')
-    new_bestiary_entry.pop('local_crets')
-    new_bestiary_entry.pop('knowledge_base')
-    new_bestiary_entry.pop('is_alive')
+
     new_bestiary_entry.pop('age')
+    new_bestiary_entry.pop('x')
+    new_bestiary_entry.pop('y')
     new_bestiary_entry.pop('task_q')
     new_bestiary_entry.pop('active_task')
     new_bestiary_entry.pop('offspring')
+    new_bestiary_entry.pop('target')
+    new_bestiary_entry.pop('local_crets')
+    new_bestiary_entry.pop('is_alive')
 
     new_name = new_bestiary_entry['species_type']
     announcement = '\033[34m' + str(new_name) + ',  A new species has evolved! \033[0m'
@@ -164,9 +169,9 @@ def update_mutation_count(p):
     sp = p['species_type']
     species = bartokmongo.read_creature_species_du('species_type',sp)
 
-    ct = species['mutation_count'] = species['mutation_count'] + 1
+    ct = species['mutation_count'] + 1
     update =  {"$set": {"mutation_count": ct}}
-    bartokmongo.update_species_by_name(species, update)
+    bartokmongo.update_species_by_name(sp, update)
 
 
 

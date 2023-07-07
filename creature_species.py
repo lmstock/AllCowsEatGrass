@@ -6,20 +6,25 @@ import logger2
 
 import core
 import species_pools
+from beast_builder import random_creature_gen
 
 # vague idea of sort of random metrics that belong to species, a sort of unit of heredity, a gene.
 # They can be tied to attributes somehow and have the ability to change so that the gene and its 
 # consequence can descend from the ancestor. (ex.  A123=100, rT49=73)
 
-'''species is a template of a creature'''
+'''
+Species is a template of a creature
+
+Creatures are only created from species on special occasions. otherwise it is expected that they will reproduce.
+Generate_creature_species is only run to populate bestiary for creation of vivarium (or, in the future, special events)
+'''
 
 def generate_creature_species():
     logger2.logger.info("generate_species")
 
     species_type = names.generate_name()
-    head = random.choice(species_pools.head_pool)
-    size = random.choice(species_pools.body_size_pool)
-    body_type = random.choice(species_pools.body_type_pool)
+
+    new_additions = random_creature_gen()
     
 
     def gen_sleep_habits():
@@ -59,9 +64,6 @@ def generate_creature_species():
     new_creature_species = {
         
         "species_type": species_type,
-        "head": head,
-        "size": size,
-        "body_type": body_type,
 
         "rest": rest,
         "sleep_duration": sleep_duration,
@@ -77,9 +79,16 @@ def generate_creature_species():
         'mutation_count': 0,
         "repr_cooldown": [0, repr]
         }
+    
+    for k,v in new_additions.items():
+        new_creature_species[k] = v
+
+    print(new_creature_species)
 
     # add to bestiary
     bartokmongo.add_creature_species(new_creature_species)
+
+
 
 
 

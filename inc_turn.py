@@ -24,56 +24,64 @@ def update_kb(x):
     logger2.logger.debug("update_kb")
 
     local_crets = x['local_crets']
+    knowledge_base = x['knowledge_base']
 
     if local_crets == False:
+        logger2.logger.info("no local crets")
+        pass
+
+    if knowledge_base == False:
+        logger2.logger.info("no knowledge base")
         pass
       
     # local_crets is a list of tuples [(cret_id, species type, active_task)]
     for i in local_crets:
-        species_name = i[1]
+        species_type = i[1]
+
+
 
         # if species type already in kb
-        if species_name in x['knowledge_base']:    
+        if species_type in knowledge_base:    
 
             # increment observation count
-            if x['knowledge_base'][species_name][0] == .5:
+            if knowledge_base[species_type][0] == .5:
                 pass
             else:
-                x['knowledge_base'][species_name][0] = x['knowledge_base'][species_name][0] + 1 
+                knowledge_base[species_type][0] = knowledge_base[species_type][0] + 1 
 
             # check if cret action is empty
             if i[2] == []:
                 # if no current action
-                x['knowledge_base'][species_name][2] = 1
+                knowledge_base[species_type][2] = 1
             
             # check if cret is attacking
             elif i[2][0] == "attack":
                 # if yes, set response code to hide
-                x['knowledge_base'][species_name][2] = 3
+                knowledge_base[species_type][2] = 3
                 
             else:
                 # if no, set response code to no response
-                x['knowledge_base'][species_name][2] = 1
+                knowledge_base[species_type][2] = 1
 
         # if cret not in kb
         else:
 
             # add cret 
-            x['knowledge_base'][species_name] = [1, 0, 1]
+            knowledge_base[species_type] = [1, 0, 1]
 
             # check if cret action is na
             if i[2] == []:
                 # if no current action
-                x['knowledge_base'][species_name][2] = 1
+                knowledge_base[species_type][2] = 1
 
             # check if cret is attacking
             elif i[2][0] == "attack":
                 # if yes, set response code to hide
-                x['knowledge_base'][species_name][2] = 3
+                knowledge_base[species_type][2] = 3
                 
             else:
                 # if no, set response code to no response
-                x['knowledge_base'][species_name][2] = 1
+                knowledge_base[species_type][2] = 1
 
     return x
 

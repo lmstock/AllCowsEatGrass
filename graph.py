@@ -49,9 +49,9 @@ for i in x:
     rest_hist = i['rest_hist']
     satiety_hist = i['satiety_hist']
 
-fig, ax = plt.subplots()  # Create a figure containing a single axes.
-ax.plot(rest_hist)  # Plot some data on the axes.
+    fig, ax = plt.subplots()  # Create a figure containing a single axes.
+    ax.plot(rest_hist)  # Plot some data on the axes.
 
-fig, ax = plt.subplots()  # Create a figure containing a single axes.
-ax.plot(satiety_hist)  # Plot some data on the axes.
-plt.show()
+    fig, ax = plt.subplots()  # Create a figure containing a single axes.
+    ax.plot(satiety_hist)  # Plot some data on the axes.
+    plt.show()

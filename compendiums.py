@@ -22,7 +22,7 @@ bestiary = bartokmongo.get_bestiary()
 herbarium = bartokmongo.get_herbarium()
 
 # headers
-bestiary_headers = ["_id", "species_type", "size", "body_type", "head"]
+bestiary_headers = ["_id", "phylum", "class", "species_type", "size", "mutable_traits", "mutation_count", "description"]
 herbarium_headers = ["_id", "flora_species_type", "size", "energy", "growth_data"]
 
 
@@ -52,16 +52,6 @@ def body_html(file_path, title):
             "\t\t<p> current_tick:  " + str(game_conf.w.current_tick) + "</p>\n"
         )
 
-# def table(file_path, pop):
-
-
-#     for i in pop:
-#         with open (file_path, "a") as dash:
-
-#             dash.write(
-#                 "<p>" + str(i) + "</p>"
-#             )
-
 
 def append_html_tables(file_path, this_dict, header_list, table_name):
     with open(file_path, "a") as dash:
@@ -86,33 +76,22 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
             # end table row
             dash.write("\t\t\t\t</tr>\n")
 
-            # get table header map
-            def map_header_order(listz):
-                map = {}
-                ct = 0
-                for i in listz:
-                    map[i] = ct
-                    ct = ct + 1
-                return map
-
-            header_map = map_header_order(header_list)
-
             # k is the species or creature / row
-            for k in this_dict.items():
+            for k,v in this_dict.items():
                 row = []
 
                 # adds a new row for each key
                 dash.write("\t\t\t\t<tr>\n")
 
-                # ids the map item we are looking for first
-                for j in header_map.items():
+                for h in header_list:
 
-                    # match it with ks attribute list
-                    for l in k[1].items():
-                        
-                        # when match, append row
-                        if l[0] == j[0]:
-                            row.append(l[1])
+                    if h not in v.keys():
+                        row.append("na")
+
+                    for vi in v.items():
+                            
+                        if vi[0] == h:
+                            row.append(vi[1])
                 
                 # adds data to row
                 for i in row:

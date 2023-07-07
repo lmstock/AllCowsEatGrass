@@ -6,28 +6,28 @@ def test_slp_trigger():
 
      ### TESTING ###
      a = {
-          'sleep_dur': 460.0,
+          'sleep_duration': 460.0,
           'rest': [150.07, -1, 170], 
           'task_q': [],
           'active_task': []
           }
 
      b = {
-          'sleep_dur': 460.0,
+          'sleep_duration': 460.0,
           'rest': [67.07, -1, 170],  
           'task_q': [],
           'active_task': ["sleep", 1, 0, 460],
           }
 
      c = {
-          'sleep_dur': 460.0,
+          'sleep_duration': 460.0,
           'rest': [67.07, -1, 170], # should generate a p3
           'task_q': [],
           'active_task': []
           }
 
      d = {
-          'sleep_dur': 460.0,
+          'sleep_duration': 460.0,
           'rest': [15.07, -1, 170],
           'task_q': [["sleep", 1, 0, 460]],
           'active_task': ["play", 1, 0, 460],
@@ -35,7 +35,7 @@ def test_slp_trigger():
           }
 
      e = {
-          'sleep_dur': 460.0,
+          'sleep_duration': 460.0,
           'rest': [15.07, -1, 170],
           'task_q': [["sleep", 3, 0, 460], ["eat", 2, 0, 460]],
           'active_task': ["play", 1, 0, 460]

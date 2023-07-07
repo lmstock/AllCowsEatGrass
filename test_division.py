@@ -1,6 +1,10 @@
 
 import creature_repr_actions, crets, bartokmongo
 
+### SETS UP TEST CREATURE ###
+# - SOMETHING IN UPDATING BESTIARY IS BROKEN AFTER MUTATION
+# - SEE see test_division_2 for test using cret from population
+
 
 def test_div():
 
@@ -8,6 +12,7 @@ def test_div():
 
     # add parent test cret to population for test
     bartokmongo.add_creature(crets.test_cret_a)
+    bartokmongo.add_creature_species(crets.test_species_a)
 
     # setup ind for divide function
     id = crets.test_cret_a['_id']
@@ -46,6 +51,6 @@ def test_div():
     # remove all crets of species type 'testcreature'
     bartokmongo.remove_test_crets()
 
+
     # remove all species in bestiary that descend from testcreature
     bartokmongo.remove_test_species()
-

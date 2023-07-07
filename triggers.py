@@ -91,15 +91,15 @@ def check_current_rest(x):
 
         # add sleep task - [task, priority, current turn, max turn]
         if x['rest'][0] < x['rest'][2] * .1:   # <10%
-            sleep = ["sleep", 1, 0, x['sleep_dur']]
+            sleep = ["sleep", 1, 0, x['sleep_duration']]
             x['task_q'].append(sleep)  
 
         elif x['rest'][0] < x['rest'][2] * .3:   # <30%
-            sleep = ["sleep", 2, 0, x['sleep_dur']]
+            sleep = ["sleep", 2, 0, x['sleep_duration']]
             x['task_q'].append(sleep)  
 
         elif x['rest'][0] < x['rest'][2] * .4:   # <40%
-            sleep = ["sleep", 3, 0, x['sleep_dur']]
+            sleep = ["sleep", 3, 0, x['sleep_duration']]
             x['task_q'].append(sleep)  
         
     

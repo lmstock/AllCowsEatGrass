@@ -21,7 +21,7 @@ cp_census3 = "G:\\censusdata3.html"
 
 
 # headers
-cret_pop_headers = ["_id", "species_type", "size", "age", "health", "x", "y", "active_task", "repr_cooldown", "offspring", "rest", "satiety", "hostility"]
+cret_pop_headers = ["_id", "phylum", "class","species_type", "size", "age", "x", "y", "active_task", "task_q", "reproduction", "offspring", "mutable_traits", "energy", "satiety", "hostility", "health"]
 flora_pop_headers = ["_id", "flora_species_type", "size", "age", "energy", "growth_data", "x", "y", "offspring"]
 
 
@@ -75,33 +75,24 @@ def append_html_tables(file_path, this_dict, header_list, table_name):
             # end table row
             dash.write("\t\t\t\t</tr>\n")
 
-            # get table header map
-            def map_header_order(listz):
-                map = {}
-                ct = 0
-                for i in listz:
-                    map[i] = ct
-                    ct = ct + 1
-                return map
 
-            header_map = map_header_order(header_list)
 
             # k is the species or creature / row
-            for k in this_dict.items():
+            for k,v in this_dict.items():
                 row = []
 
                 # adds a new row for each key
                 dash.write("\t\t\t\t<tr>\n")
 
-                # ids the map item we are looking for first
-                for j in header_map.items():
+                for h in header_list:
 
-                    # match it with ks attribute list
-                    for l in k[1].items():
-                        
-                        # when match, append row
-                        if l[0] == j[0]:
-                            row.append(l[1])
+                    if h not in v.keys():
+                        row.append("na")
+
+                    for vi in v.items():
+                            
+                        if vi[0] == h:
+                            row.append(vi[1])
                 
                 # adds data to row
                 for i in row:

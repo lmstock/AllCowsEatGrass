@@ -192,6 +192,41 @@ test_cret_c = {
   }
 
 
+# modified for test reset parent
+# 
+test_cret_d = {
+  "species_type": "testcreature",
+  "size": "tiny",
+  "sleep_dur": 10,
+  "rest_gain": 25,
+  "rest": [368.15,-0.37,370],
+  "satiety": [95,-1,100],
+  "energy": [100,100],
+  "hostility": [49,50],
+  "health": [100,100],
+  "speed": 94,
+  "fov": 1000,
+  "age": 0.000015,
+  "x": 156,
+  "y": 250,
+  "task_q": [],
+  "active_task": ["wander",3,0,3],
+  "repr_cooldown": [5,100],
+  "offspring": 0,
+  "attack": 10,
+  "defend": 10,
+  "target": 0,
+  "local_crets": [],
+  "knowledge_base": {
+    "xuge": [0.5,0.5,1],
+    "imah": [5,0,1],
+    "fefeiv": [5,0,1],
+    "daix": [5,0,1],
+	"ne": [5,0,1]},
+  "is_alive": True
+  }
+
+
 
 
 

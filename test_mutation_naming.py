@@ -3,7 +3,6 @@ from core import whatsmyname
 
 def test_mut_nam():
     # input species name string
-
     # output name with correct suffix
 
     a1 = 'ox'
@@ -81,3 +80,4 @@ def test_mut_nam():
     m = whatsmyname(i1, i2)
     assert m =='ox.b.a.e'
     print("TEST 9 pass")
+

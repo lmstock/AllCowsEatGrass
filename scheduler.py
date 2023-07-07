@@ -2,8 +2,7 @@ import logger2
 import bartokmongo
 import creature
 import flora
-import compendiums
-import census_data
+
 
 
 
@@ -14,11 +13,14 @@ def scheduler_run():
 
     # pull list of population -id from db
     p = bartokmongo.get_population()
+    pop_count = len(p)
+    print(pop_count)
 
     for i in p:
-
-        x = bartokmongo.read_ind_by_id(i)   # x = cursor object
+        
+        x = bartokmongo.read_ind_by_id(i)   # x = dict
         creature.creature_action(x)
+
 
 
 
@@ -27,7 +29,7 @@ def scheduler_run():
 
     for k in f:
 
-        ind = bartokmongo.read_flora_ind_byid(k)   # ind = cursor object
+        ind = bartokmongo.read_flora_ind_byid(k)   # cursor still?
         for l in ind:
 
             flora.flora_action(l)
