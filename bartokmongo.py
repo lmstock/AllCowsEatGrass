@@ -197,6 +197,20 @@ def get_collection(collection_name):
         census_dict.update({i['_id']:i})
     return census_dict
 
+# for c_bestiary
+def get_bestiary():
+    full_bestiary = []
+    for x in  db.bestiary.find({},{"species_type": 1 , "phylum": 1, "size": 1, "exoskeleton_color": 1, "eyes": 1, "legs": 1}):
+        full_bestiary.append(x)
+    return full_bestiary
+
+
+
+
+
+
+
+
 def get_population():
     logger2.logger.debug("get_population")
     # get _ids

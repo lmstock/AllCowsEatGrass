@@ -159,7 +159,7 @@ def run_model_function():
                     run_model()
                     window['-PROBAR-'].update_bar(i+1, count)
                     window['-TICK-'].update(game_conf.w.current_tick)
-                    compendiums.compendium_report()
+                    #compendiums.compendium_report()
                     census_data.census_report()
                     print(game_conf.w.current_tick)
                     

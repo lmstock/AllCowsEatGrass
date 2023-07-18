@@ -1,14 +1,14 @@
 import PySimpleGUI as sg
 
-def population_window():
-    print("population_window")
+def flora_pop_window():
+    print("flora_pop_window")
 
     sg.theme('DarkBrown')
 
     
 
     col1 = [
-        [sg.Text("POPULATION")],
+        [sg.Text("FLORA POPULATION")],
         [sg.Text("click on individual to open more detail")],
         [sg.Table([[1,2,3], [4,5,6]], ['Col 1','Col 2','Col 3'], num_rows=2)],
         [sg.Button('Gen Individual', size=20, key="-GEN_IND-")],
@@ -20,7 +20,7 @@ def population_window():
     layout = [[sg.Column(col1)]]
 
     # window Label
-    window = sg.Window('POPULATION', layout)
+    window = sg.Window('FLORA POPULATION', layout)
 
 
     while True:
@@ -43,4 +43,4 @@ def population_window():
     window.close()
 
 if __name__ == "__main__":
-    population_window()
+    flora_pop_window()
