@@ -14,8 +14,8 @@ pop_title = "Alkows Census Data"
 style_sheet = "style.css"
 
 # file paths
-census3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\censusdata3.html"
-cp_census3 = "G:\\censusdata3.html"
+census3 = "file path"
+cp_census3 = "file path"
 
 # db functions
 

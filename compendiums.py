@@ -14,8 +14,8 @@ pop_title = "Alkows Compendium"
 style_sheet = "style.css"
 
 # file paths
-compendium3 = "C:\\Users\\michelle\\code\\bartok\\AllCowsEatGrass\\compendium3.html"
-cp_compendium3 = "G:\\compendium3.html"
+compendium3 = "file path"
+cp_compendium3 = "file path"
 
 # db functions
 bestiary = bartokmongo.get_bestiary()
