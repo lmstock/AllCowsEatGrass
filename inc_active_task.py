@@ -1,38 +1,49 @@
 
 import creature_actions as ca
-import logthis
+import creature_repr_actions as cra
+import logger2
+import core
 
-def increment_active_task(self):
-    logthis.logger.debug("increment_active_task")
-
-
-
+def increment_active_task(s):
+    logger2.logger.debug("increment_active_task")
 
     #if active_task is empty, pass
-    if self.active_task == []:
-        pass
+    if s['active_task'] == []:
+
+        s['active_task'] = ["wander", 3, 1, 1]
+        return s
 
 
     else:
 
-        if self.active_task[0] == "sleep":
-            #sleep(self)
-            ca.sleep(self)
+        if s['active_task'][0] == "sleep":
+            result = ca.sleep(s)
 
-        elif self.active_task[0] == "wander":
-            ca.wander(self)
+        elif s['active_task'][0] == "wander":
+            result = ca.wander(s)
 
-        elif self.active_task[0] == "nothing":
-            ca.nothing(self)
-
-        elif self.active_task[0] == "eat":
-            ca.eat(self)
+        elif s['active_task'][0] == "eat":
+            result = ca.eat(s)
         
-        elif self.active_task[0] == "play":
-            ca.play(self)
+        elif s['active_task'][0] == "play":
+            result = ca.play(s)
 
-        elif self.active_task[0] == "observe":
-            ca.observe(self)
+        elif s['active_task'][0] == "divide":
+            result = cra.divide(s)
 
+        elif s['active_task'][0] == "attack":
+            result = ca.attack(s)
+
+        elif s['active_task'][0] == "defend":
+            result = ca.defend(s)
+
+        elif s['active_task'][0] == "die":
+            result = ca.die(s)
+
+        s = core.check_active_task(result)
+        s = core.promote_task_q(s)
+        return s
+
+    
 
 

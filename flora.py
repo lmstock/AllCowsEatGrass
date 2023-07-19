@@ -1,81 +1,164 @@
 import random
-import pygame
 
-from dataclasses import dataclass, field
-from itertools import count
-
-import logthis
-import scheduler
+import logger2
+import bartokmongo
 import game_conf
-import flora_species
 import core
+import to_color
 
 
-@dataclass
-class Flora:
-    type: str
-    img: str
-    #bg_img: str
-    size: str
-    energy: int
-    growth_data: list
-    coords: list[int] 
 
-    flora_id: int = field(default_factory=count().__next__)
-    
-    age: int = 0
+# checks on what the individual is doing each turn
+def flora_action(f):
+    logger2.logger.debug("flora_action")
+
+    def increment_turn(f):
+        logger2.logger.debug("increment_turn")
+
+        # update attributes that change each turn
+        f['age'] = round(f['age'] + .01, 2)
+        f['growth_data'][2] = f['growth_data'][2] + 1
+        return f
 
 
-    # checks on what the individual is doing each turn
-    def action(self):
-        logthis.logger.debug("action")
+    def growth_check(f):
+        logger2.logger.debug("grow")
 
-        def increment_turn(self):
-            logthis.logger.debug("increment_turn")
+        def check_cooldown(f):
+            logger2.logger.debug("check_cooldown")
+            if f['growth_data'][2] > f['growth_data'][3]:
+                logger2.logger.debug("passed cool down")
+                return True
+            else: 
+                logger2.logger.debug("failed cool down")
 
-            # update attributes that change each turn
-            self.age = round(self.age + .01, 2)
+                # increment cool down
+                f['growth_data'][2] = f['growth_data'][2] + 1
+                return False
+            
+        def growth_roll(f):
+            logger2.logger.debug("growth_roll")
+            roll_check =  core.roll(1,100)
 
-        def grow(self):
-            logthis.logger.debug("grow")
+            if roll_check > f['growth_data'][1]:
+                return True
+            else:
+                return False
 
-        def update_viewport(self):
-            logthis.logger.debug("update_viewport")
-            game_conf.g.game_display.blit(self.img, self.coords)
-            pygame.display.update()
+        def grow(f):
+            logger2.logger.debug("grow")
 
-        increment_turn(self)
-        grow(self)
-        update_viewport(self)
+            # check for duplicate species at that location
+            def check_for_duplicate(species,x,y):
+                msg = str(x) + " " + str(y) + " check for duplicate"
+                logger2.logger.debug(msg)
+
+                # db function
+                cursor = bartokmongo.check_for_dup(species, x, y)
+                for i in cursor:
+                    if i['x'] == x and i['y'] == y:
+                        return True
+                    else:
+                        
+                        logger2.logger.debug("duplicate false")
+                        return False
+
+            x = f['x']
+            y = f['y']
+            dist = f['growth_data'][0]
+
+            dirs = ["w", "n", "e", "s"]
+            c = random.choice(dirs)
+
+            if c == "w":
+                x = x - dist
+            if c == "e":
+                x = x + dist
+            if c == "n":
+                y = y + dist
+            else: # s
+                y = y - dist
+
+            msg = to_color.Colors.fg.blue + str(dist) + " " + str(x) + " " + str(y) + to_color.Colors.reset
+            logger2.logger.debug(msg) 
+
+            # reset counter
+            f['growth_data'][2] = 0
+
+            # count offspring
+            if 'offspring' not in f: 
+                f['offspring'] = 1
+
+            else:
+                f['offspring'] = f['offspring'] + 1
+
+            if check_for_duplicate(f['flora_species_type'],x,y) == True:
+                pass
+            else:
+                generate_flora(f['flora_species_type'], x, y)
+
+
+            return f
+
+
+        # check cooldown
+        x = check_cooldown(f)
+        if x == False:
+            return (f)
+        else: pass
+
+        # check growth_roll
+        y = growth_roll(f)
+        if y == False:
+            return (f)
+        else: pass
         
+        f = grow(f)
+        return f
 
-def generate_flora(flora_type):
-    logthis.logger.debug("generate flora")
 
-    my_img = flora_species.herbarium[flora_type]["img"]
-    my_size = flora_species.herbarium[flora_type]["size"]
-    
-    get_coords = core.random_coords()
+    f = increment_turn(f)
+    f = growth_check(f)
 
-    
-    new_flora = Flora (
-        flora_type,
-        my_img,
-        my_size,
-        energy = 100,
-        growth_data = [],
-        coords = get_coords
-)
 
-    logthis.logger.info(new_flora)
+    bartokmongo.update_flora_byid(f['_id'], f)
+        
+# always print flora gen to terminal
+def generate_flora(flora_type, x, y):
+    logger2.logger.debug("generate flora")
 
-    # add to green room
-    new_flora_data = new_flora.__dict__
-    scheduler.flora_population[new_flora.flora_id] = new_flora_data
-    scheduler.green_room.append(new_flora)
+    s = bartokmongo.read_flora_species("flora_species_type", flora_type)
+
+    # iterate through with i
+    for i in s:
+        print(to_color.Colors.fg.green, i['_id'], " a ", i['flora_species_type'], " has been produced ", to_color.Colors.reset)
+
+    # add to db
+    new_flora = {
+        "flora_species_type": i["flora_species_type"],
+        "size": i["size"],
+        "flora_type": i["flora_type"],
+        "energy": i["energy"],
+        "growth_data": i["growth_data"],   
+        "x": x,
+        "y": y,
+        "age": 0,
+        "offspring": 0
+    }
+
+    bartokmongo.add_flora(new_flora)
+
 
 def get_random_flora_type():
-    logthis.logger.debug("get_random_flora_type")
-    f = random.choice(flora_species.herbarium_names)
-    return f
+    logger2.logger.debug("get_random_flora_type")
+    return random.choice(bartokmongo.list_flora())
 
+def generate_random_flora():
+    logger2.logger.info("generate_random_flora")
+
+    x = core.roll(1,500)
+    y = core.roll(1,500)
+
+    t = get_random_flora_type()
+    print(t,x,y)
+    generate_flora(t,x,y)

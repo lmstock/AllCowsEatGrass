@@ -1,11 +1,11 @@
 import pygame
 import pprint
 
-import species
+import creature_species
 import creature
 import scheduler
 import game_conf
-import logthis
+import archive_tests.logthis as logthis
 import core
 
 from dataclasses import dataclass, field
@@ -41,7 +41,7 @@ phase2 -
 # generate species and creatures to work with
 
 for i in range(1,7):
-    species.generate_species()
+    creature_species.generate_species()
 
 for i in range(1,5):
     creature.generate_creature(creature.get_random_creature_type())
@@ -68,7 +68,7 @@ def main(turn, running):
 
             if event.key == K_b:
                 logthis.logger.debug("b = bestiary")
-                pprint.pprint(species.bestiary)
+                pprint.pprint(creature_species.bestiary)
 
             if event.key == K_p:
                 logthis.logger.debug("p = population")

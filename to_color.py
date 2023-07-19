@@ -1,6 +1,7 @@
 class Colors:
 
 
+
 # '''Colors class:reset all colors with colors.reset; two
 # sub classes fg for foreground
 # and bg for background; use as colors.subclass.colorname.
@@ -43,5 +44,5 @@ class Colors:
         cyan = '\033[46m'
         lightgrey = '\033[47m'
 
-print("SKk", Colors.fg.red, "Amartya")
-print(Colors.fg.yellow, "txt  ")
+# print("SKk", Colors.fg.red, "Amartya")
+# print(Colors.fg.yellow, "txt  ")

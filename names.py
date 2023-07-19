@@ -1,12 +1,12 @@
 import random
 
-import logthis
+import logger2
 
 
 # this is an old name generator that I made several years back and could use tidied up.
 
 def generate_regional_sounds():
-    logthis.logger.debug("generate_regional_sounds")
+    logger2.logger.debug("generate_regional_sounds")
     big_list_of_sounds = [
         'ab', 'eb', 'ib', 'ob', 'ub', 'ba', 'be', 'be', 'bo', 'bu',
         'ad', 'ed', 'id', 'od', 'ud', 'da', 'de', 'de', 'do', 'du',
@@ -37,7 +37,7 @@ def generate_regional_sounds():
 
 
 def generate_name():
-    logthis.logger.debug("generate_name")
+    logger2.logger.debug("generate_name")
     
     regional_sound = generate_regional_sounds() 
     

@@ -1,19 +1,13 @@
 import random
-import pprint
 
-from dataclasses import dataclass, field
-from itertools import count
-
+import bartokmongo
 import names
-import logthis
-import scheduler
-import game_imgs.imgs as imgs
+import logger2
+import core
 
 
-import game_imgs.flora.plant_imgs
 
-herbarium = {}
-herbarium_names = []
+
 
 # fungus
 type_pool = [
@@ -34,7 +28,7 @@ plant_size_pool = [
 
 body_parts = [
     "leaves",
-    "seeds"
+    "seeds",
     "thallus",
     "roots",
     "stem",
@@ -55,43 +49,33 @@ colors = [
 
 ]
 
-
-@dataclass
-class FloraSpecies:
-
-    name: str
-    img: str
-    #img_bg: str
-    type: str
-    size: str
-    energy: float
-    growth_data: list # growth speed, max growth, growth stages
-
-    species_id: int = field(default_factory=count().__next__)
-
+'''species is a template of a creature'''
 
 def generate_flora_species():
-    logthis.logger.info("generate_flora_species")
+    logger2.logger.info("generate_flora_species")
 
-    name = names.generate_name()
-    type = random.choice(type_pool)
+    flora_species_type = names.generate_name()
     size = random.choice(plant_size_pool)
-    img = game_imgs.flora.plant_imgs.plant1
+    flora_type = random.choice(type_pool)
 
-    # generate new flora species object
-    new_flora_species = FloraSpecies(
-        name,
-        img,
-        type,
-        size,
-        energy = 100,
-        growth_data = [1,1,1])
+    # will be generated
+    energy = 100
 
+    # will be generated (spread distance 0-10, chance for spread 10 - 100%, counter, cooldown)
+    spread_distance = core.roll(1,10)
+    spread_chance = core.roll(1,50)
+    cooldown = core.roll(10,100)
+    growth_data = (spread_distance, spread_chance, 0, cooldown)
+    
+    # herbarium is collection in mongo
+    new_flora_species = {
+
+        "flora_species_type": flora_species_type,
+        "size": size,
+        "flora_type": flora_type,
+        "energy" : energy,
+        "growth_data" : growth_data
+        }
 
     # add to herbarium
-    flora_species_data = new_flora_species.__dict__
-    herbarium[name] = flora_species_data
-
-    # add to herbarium names list
-    herbarium_names.append(new_flora_species.name)
-    print(herbarium)
+    bartokmongo.add_flora_species(new_flora_species)

@@ -1,74 +1,78 @@
+from time import sleep 
 from dataclasses import dataclass
-import logthis    
-import pygame
+import logger2  
 
-
+import bartokmongo
 
 
 @dataclass
-class Game_config:
-    running: bool = True
-    display_width: int = 1200
-    display_height: int = 600
-    game_display = pygame.display.set_mode((display_width, display_height))
-    white: tuple = (255,255,255)
-    bg_color = white
-    current_tick: int = 50
-    ticks_per_day = 1000
-    clock=pygame.time.Clock()
-    clock.tick(.5)
-    pygame.display.set_caption("clockmaker")
+class World:
+    world_name: str
+    world_health: int
+
+    current_tick: int
+    ticks_per_day: int
+
+        
+    def start_game(self):
+        self.running = True
+
+    def stop_game(self):
+        self.running = False
+        
 
 
     def increment_tick(self):
-        msg = "Current Tick: " + str(self.current_tick + 1)
-        logthis.logger.info(msg)
-        self.clock.tick(.5)
-        self.current_tick = self.current_tick + 1
+        tick = int(self.current_tick) + 1
+        msg = "Current Tick: " + str(tick) 
+        sleep(1)
+        self.current_tick = tick
+
+    def update_world(self):
+        logger2.logger.debug("update_world")
+        update = {"current_tick" : self.current_tick}
+        bartokmongo.update_world(self.world_name, update)
 
 
-    def get_bg_color(self):
+
+def build_world(world_name):
+    logger2.logger.info("build_world")
     
-        def get_hund(m):
-            n = str(m)
+    w = bartokmongo.get_world_data(world_name)
+    
+    for i in w:
 
-            if len(n) <= 2:
-                h = 0
-            else:
-                h = n[-3]
-            return h
-        
-        n = int(get_hund(self.current_tick))
+        world_name = i["world_name"]
+        world_health = i["world_health"]
+        current_tick = i["current_tick"]
+        ticks_per_day = i["ticks_per_day"]
 
-        def wtf(n):
+    world = World(
+        world_name,
+        world_health,
 
-            if n == 0:  return (25,60,90)
-            elif n == 1 or n == 9: return (70,94,104)
-            elif n == 2 or n == 8: return (115,128,118)
-            elif n == 3 or n == 7: return (160,162,132)
-            elif n == 4 or n == 6: return (205,196,146)
-            elif n == 5: return (250,230,160)
-                
-        return wtf(n)
+        current_tick,
+        ticks_per_day
+    )
+
+    print (world)
+
+    return world
+
+
+def setup_world(world_name):
+
+    w = build_world(world_name)
+    w.start_game()
+    return w
     
 
-    def start_game(self):
-        self.running = True
-        pygame.init()
+world_name = "alkows"
+w = setup_world(world_name)
 
 
 
-g = Game_config()
-g.start_game()
 
 
 
-# creating a clock object
-#clock=pygame.time.Clock()
 
-#game_display = pygame.display.set_mode((display_width, display_height))
-
-#game_display.fill(bg_color) 
-
-
-#pygame.display.update()
