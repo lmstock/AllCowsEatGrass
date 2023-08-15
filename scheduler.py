@@ -14,7 +14,7 @@ def scheduler_run():
     # pull list of population -id from db
     p = bartokmongo.get_population()
     pop_count = len(p)
-    print(pop_count)
+    print("population count: ", pop_count)
 
     for i in p:
         
