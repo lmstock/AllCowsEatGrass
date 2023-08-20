@@ -1,8 +1,8 @@
 import PySimpleGUI as sg
-import v_habitats
-import v_collections
-import v_start_habitat
-import v_helpset
+import windows_navigation
+import windows_collections
+import windows_detail
+import windows_habitat
 import run_model
 
 
@@ -30,16 +30,16 @@ def vivarium_window():
         print(event, values)
 
         if event == '-HABITATS-':
-            v_habitats.habitats_window()
+            windows_habitat.create_habitat_window()
 
         if event == '-COLLECTIONS-':
-            v_collections.collections_window()
+            windows_navigation.collections_window()
 
         if event == '-START-':
             run_model.run_model_function()
 
         if event == '-HELP-':
-            v_helpset.help()
+            windows_navigation.help()
 
         if event == sg.WIN_CLOSED or event == '-EXIT-':
             break

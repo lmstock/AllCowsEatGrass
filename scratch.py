@@ -1,47 +1,31 @@
-import PySimpleGUI as sg
-import bartokmongo
+### test creatures interacting 
 
 
-def create_window():
+'''
+creatures hold each other as variable
 
-    table_headers = ["id", "species_type", "phylum", "size", "exoskeleton_color", "eyes", "legs"]
-    bestiary = bartokmongo.get_bestiary()
+two young creatures play
 
-    def get_rows():
-        rows = []
-        for i in bestiary:
-            row = []
-            for k,v in i.items():
-                row.append(v)
-            rows.append(row)
-        return rows
+- playing consists of one creature following the other 
+    - random choice "player_a" and "player_b
+    - random number of turns (between 2 and 30?)
+    - running or walking
+    - near or far
+- play fighting, looks like fighting but with no damage
 
-    print (bestiary)
-    rows = get_rows()
+what types of creatures will play together?
+- young creatures are more likely (work on age behaviors later) but any creature
+- identify potential playmate from knowledge base
+- mobile creatures of same trophic level
 
-    table = sg.Table(headings=table_headers, values=rows[:][:], auto_size_columns=True, justification='center', key="-TABLE-", vertical_scroll_only=False, expand_x=True, expand_y=True, enable_click_events=True, display_row_numbers=True)
-    col1 = [
-        [table]
-    ]
+creatures near each other roll for initiation
 
-    layout = [[sg.Column(col1)]]
-
-    # window Label
-    window = sg.Window('POPULATION', layout)
+'''
 
 
-    while True:
-        event, values = window.read()
-        print(event, values)
-
-        if event == sg.WIN_CLOSED or event == '-EXIT-':
-            break
+import random
 
 
-        window.close()
-
-if __name__ == "__main__":
-    create_window()
-
-
-create_window()
+for i in range(30):
+    x = random.randint(0,5) 
+    print(x)
